@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Patching django polymorphism</title>
+	<meta name="author" content="Anthony Tresontani">
+	<link href='/assets/themes/the-minimum/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Patching django polymorphism" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<p class="logo"><a href="/">Anthony Tresontani blog</a></p>
+				<nav class="nav-global">
+					<ul>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="page"><a href="/pages.html">pages</a></li>
+						<li class="category"><a href="/categories.html">categories</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Patching django polymorphism</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<h2 id='remember_oop'>Remember OOP</h2>
+
+<p>For the one who don&#8217;t remember what is the abstract notion of <a href='http://en.wikipedia.org/wiki/Polymorphism_in_object-oriented_programming'>polymorphism</a>. Here is a reminder:</p>
+
+<pre><code>class Duck(object):
+    def quack(self):
+        print &quot;QUACK&quot;
+
+class FrenzyDuck(Duck):
+    def quack(self):
+        print &quot;QUACK&quot; * 4
+
+ducks = [Duck(), FrenzyDuck()]
+for duck in ducks:
+    duck.quack()</code></pre>
+
+<p>And you will get:</p>
+
+<pre><code>&quot;QUACK&quot;
+&quot;QUACKQUACKQUACKQUACK&quot;</code></pre>
+
+<p>Now, if we translate this in a Django way:</p>
+
+<pre><code>class Duck(models.Model):
+    name = models.CharField(max_length=15)
+    def quack(self):
+        print &quot;QUACK&quot;
+
+class FrenzyDuck(Duck):
+    def quack(self):
+        print &quot;QUACK&quot; * 4
+
+fifi = Duck.objects.create(name=&quot;fifi&quot;)
+loulou = FrenzyDuck.objects.create(name=&quot;loulou&quot;)
+
+fifi.quack()
+loulou.quack()
+
+for duck in Duck.objects.all():
+    duck.quack()</code></pre>
+
+<p>you get:</p>
+
+<pre><code>&quot;QUACK&quot;
+&quot;QUACKQUACKQUACKQUACK&quot;
+&quot;QUACK&quot;
+&quot;QUACK&quot;    # Should have been &quot;QUACKQUACKQUACKQUACK&quot;</code></pre>
+
+<p>Django provides some mechanisms to emulate polymorphism, but that works only in some restricted cases. Why doesn&#8217;t Django call the right method? Cause Django don&#8217;t remember and we didn&#8217;t give Django a way to remember.</p>
+
+<p>In the database, we would have something like that:</p>
+
+<pre><code>&gt; select * from duck_duck;
+ID | NAME
+---------
+1  | fifi
+2  | loulou</code></pre>
+
+<p>There is obviously nothing which says &#8220;Loulou is more than a duck, he is a frenzy duck&#8221;.</p>
+
+<h2 id='why_you_should_care'>Why you should care?</h2>
+
+<p>That doesn&#8217;t seem to be such a big deal.</p>
+
+<p>I am working in a company where we build e-commerce websites. Different kinds of products have different behavior. We can have:</p>
+
+<ul>
+<li>Normal product</li>
+
+<li>Product grouped together, like multiple sizes T-shirt</li>
+
+<li>Customisable product, like a T-shirt where you can define your own logo</li>
+</ul>
+
+<p>Our code would have looked like:</p>
+
+<pre><code>def my_view(request, product):
+    if product.is_customised():
+       product.do_customised_things()
+    elif product.is_grouped():
+       product.do_grouped_things()
+    else:
+       product.do_normal_things()</code></pre>
+
+<p>Not really a sexy code. With polymorphism, we would have:</p>
+
+<pre><code>def my_view(request, product):
+    product.do_things()</code></pre>
+
+<p>Much better.</p>
+
+<p>We also have custom display of theses products, eg a template can look like:</p>
+
+<pre><code>{% for product in products %}
+    {% if product.is_customised %}
+        {% include &quot;customised.html&quot; %}
+    {% elif product.is_grouped %}
+        {% include &quot;grouped.html&quot; %}
+    {% else %}
+        {% include &quot;normal.html&quot; %}
+{% endfor %}</code></pre>
+
+<p>why not:</p>
+
+<pre><code>{% for product in products %}
+    {% include product.template_name %}
+{% endfor %}</code></pre>
+
+<p>That&#8217;s shorter, more DRY and easier to maintain. I want that in my project.</p>
+
+<h2 id='solution'>Solution</h2>
+
+<p>If we want fully support polymorphism, we should find a way to tell Django which object is of which class. From here, you can find many solutions, most of them relying on storing the real class in a table.</p>
+
+<p>We have an original approach. Most of the time, you know the type of object you have indirectly because of another attribute having a particular value. For example, a grouped product will have is_group value set to True. IE, there are some rules in your system which allow you to know the real class of an object.</p>
+
+<p>Now, we should find a way to let Django know these rules. The <code>get_proxy_class</code> pattern (purely invented for the sake of this article).</p>
+
+<pre><code>from django.db import models
+from django.db.models.signals import post_init
+from django.dispatch.dispatcher import receiver
+
+class Duck(models.Model):
+    name = models.CharField(max_length=15)
+    def quack(self):
+        print &quot;QUACK&quot;
+
+    def _get_proxy_class(self):     #(1)
+        if self.name == &quot;loulou&quot;:
+            return FrenzyDuck
+        return Duck
+
+class FrenzyDuck(Duck):
+    def quack(self):
+        print &quot;QUACK&quot; * 4
+
+    class Meta:                      #(2)
+        proxy = True
+
+@receiver(post_init)                 #(3)
+def update_proxy_object(sender, **kwargs):
+    instance = kwargs[&#39;instance&#39;]
+    if hasattr(instance, &quot;_get_proxy_class&quot;) and not instance._meta.proxy:
+        instance.__class__ = instance._get_proxy_object()
+
+fifi = Duck.objects.create(name=&quot;fifi&quot;)
+loulou = FrenzyDuck.objects.create(name=&quot;loulou&quot;)
+
+fifi.quack()
+loulou.quack()
+
+for duck in Duck.objects.all():
+    duck.quack()</code></pre>
+
+<p>now, you get:</p>
+
+<pre><code>&quot;QUACK&quot;
+&quot;QUACKQUACKQUACKQUACK&quot;
+&quot;QUACK&quot;
+&quot;QUACKQUACKQUACKQUACK&quot;</code></pre>
+
+<p>Here are some explanations:</p>
+
+<p>(1) You define a method which knows which class should be returned depending on some rules.</p>
+
+<p>(2) Your subclass should be a proxy. That&#8217;s also working with real subclass, but I would avoid using it as you may have object not completely initialized and it&#8217;s a nightmare to debug.</p>
+
+<p>(3) When the object is initialized by Django, if the get_proxy_class is defined, we cast the object. We do that only if the object is not already a proxy.</p>
+
+<p>With that solution, you can now have fully featured polymorphism at no extra (DB) cost.</p>
+
+<h2 id='too_good_to_be_real'>Too good to be real?</h2>
+
+<p>As any solution, there are some trade-offs. We are using it in <a href='http://www.tangentlabs.co.uk/'>tangentlabs</a> and we get great benefits from it. But there is still:</p>
+
+<ul>
+<li>
+<p>You cannot easily define model with different data. We tried and we failed, spending many hours trying to understand why this object is badly initialized.</p>
+</li>
+
+<li>
+<p>Your main class is responsible to provide this mechanism, IE your parent class knows all its children. That would prevent to use this mechanism for an external application. This limitation can be easily worked around by providing a function external to the class, like:</p>
+
+<p>def get_proxy_class(instance): if isinstance(instance, Duck): &#8230; previous code &#8230;</p>
+</li>
+</ul>
+
+<p>That&#8217;s it.</p>
+					<div class="meta">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-09-11T00:00:00+02:00" datetime="2012-09-11T00:00:00+02:00" pubdate>
+							<span class="month"><abbr>September</abbr></span>
+							<span class="day">11</span>
+							<span class="year">2012</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/categories.html#Python-ref">
+    		Python <span>3</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Python-ref">Python <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#Django-ref">Django <span>2</span></a></li>
+    
+  
+
+
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="atresontani" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/atresontani" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'anthonytresontani'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->
+				
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/Thoughts/2012/09/10/producing-outcome" title="View Producing outcome">&laquo; Producing outcome</a></li>
+							
+							
+							<li class="pipe"> | </li>
+							
+							
+							<li class="next"><a class="internal" rel="next"  href="/Django/2012/09/12/wka-django-orm-limitations" title="View Workaround Django ORM limitation - create views">Workaround Django ORM limitation - create views &raquo;</a></li>
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Anthony Tresontani</span> - <span class="fn email">dev@tresontani.com</span></address></li>
+						<li class="github"><a href="http://github.com/anthony-tresontani/" rel="me">github.com/anthony-tresontani</a></li>
+						<li class="twitter"><a href="http://twitter.com/atresontani/" rel="me">twitter.com/atresontani</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://layouts-the.me">the_minimum</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/Python/2012/09/11/django-polymorphism" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+</body>
+</html>
+

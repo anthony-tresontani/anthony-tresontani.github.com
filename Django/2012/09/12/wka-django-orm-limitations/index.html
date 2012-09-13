@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Workaround Django ORM limitation - create views</title>
+	<meta name="author" content="Anthony Tresontani">
+	<link href='/assets/themes/the-minimum/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Workaround Django ORM limitation - create views" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<p class="logo"><a href="/">Anthony Tresontani blog</a></p>
+				<nav class="nav-global">
+					<ul>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="page"><a href="/pages.html">pages</a></li>
+						<li class="category"><a href="/categories.html">categories</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Workaround Django ORM limitation - create views</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<p>I faced this problem yesteday.</p>
+
+<pre><code>------------------      --------------      ------------------
+| Recommendation |      | Product    |      | Promotion      |
+------------------      --------------      ------------------
+| ID             |  |-&gt; | ID         | &lt;-|  | ID             |
+| Product        | -|   |            |   |- | Product        |
+------------------      --------------      ------------------</code></pre>
+
+<p>and I needed to sort promotion by the presence of recommendations, ie &#8220;Promotion were a recommendation exists should be first&#8221;.</p>
+
+<h2 id='the_django_way'>The Django way</h2>
+
+<p>I still haven&#8217;t found a proper way to do this with plain Django. But, if one solution exists, that would be:</p>
+
+<ul>
+<li>Build 2 querysets and merge them by any way (Merging a queryset is quite painful). Problem: code messy + lose the queryset for a list</li>
+
+<li>For any <code>promotion</code>, do a query to get the recommendation. Problem: performance</li>
+
+<li>Use extra. Problem: Never managed to do it, unreadable and hard to maintain</li>
+
+<li>Raw SQL. Problem: We have many other filters to apply + lose the queryset for a rawQuerySet</li>
+</ul>
+
+<h2 id='the_better_solution'>The better solution</h2>
+
+<p>What if we already have <code>promotions</code> and <code>recommendations</code> info in the same table, that would be easier. That&#8217;s what a view is designed for. Providing up-to-date information coming from other tables.</p>
+
+<p>Django works nicely with views since 1.1. What you want is to add the ID of <code>Recommendation</code> to the <code>promotion</code> table and if there is no match, add Null. That&#8217;s a LEFT JOIN.</p>
+
+<p>That&#8217;s done with:</p>
+
+<pre><code>DROP VIEW my_view
+CREATE VIEW my_view AS
+    SELECT 
+        promotion.*, recommendation.ID
+    FROM
+        promotion LEFT JOIN recommendation
+        ON promotion.product == recommendation.product</code></pre>
+
+<p>Now, to avoid duplication, our <code>promotion and recommendation view</code> should extend the same base class <code>Promotion</code></p>
+
+<pre><code>class AbstractPromotion(models.Model):
+    product = models.ForeignKey(Product, related_name=&quot;%(class)s&quot;)    #(1)
+ 
+    class Meta:
+        abstract = True
+
+class Promotion(AbstractPromotion): pass
+
+class PromotionView(AbstractPromotion):
+    recommendation_id = models.IntegerField()     # (2)
+
+    class Meta:
+        ordering = [&quot;recommendation_id&quot;]     # (3)</code></pre>
+
+<p>(1) You need to have different related names to not have Django complaining. That&#8217;s the way to do. More explications, <a href='https://docs.djangoproject.com/en/dev/topics/db/models/#s-be-careful-with-related-name'>read the Django doc about that</a></p>
+
+<p>(2) I haven&#8217;t tested it with a ForeignKey but I don&#8217;t see why that wouldn&#8217;t work.</p>
+
+<p>(3) That was our main problem and we fixed it.</p>
+
+<h2 id='job_done'>Job done?</h2>
+
+<p>We fixed the problem nicely but now we should be able to integrate this on our workflow to not break our automated deployment or testing.</p>
+
+<p>How to create automatically this view ? The answer is <strong>SOUTH</strong></p>
+
+<pre><code>def forwards(self, orm):
+    db.execute(&quot;DROP VIEW IF EXISTS my_view&quot;)    #(1)
+    db.execute(&quot;&quot;&quot;CREATE VIEW my_view AS
+                      SELECT
+                          promotion.*, recommendation.ID
+                      FROM
+                          promotion LEFT JOIN recommendation
+                      ON promotion.product == recommendation.product
+               &quot;&quot;&quot;)</code></pre>
+
+<ol>
+<li>Why not &#8220;CREATE VIEW OR REPLACE&#8221;? simply because that&#8217;s not compatible with <a href='http://www.sqlite.org/lang_createview.html'>sqlite</a></li>
+</ol>
+					<div class="meta">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-09-12T00:00:00+02:00" datetime="2012-09-12T00:00:00+02:00" pubdate>
+							<span class="month"><abbr>September</abbr></span>
+							<span class="day">12</span>
+							<span class="year">2012</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/categories.html#Django-ref">
+    		Django <span>1</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Django-ref">Django <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#ORM-ref">ORM <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="atresontani" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/atresontani" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    var disqus_developer = 1;
+    var disqus_shortname = 'anthonytresontani'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->
+				
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/Python/2012/09/11/django-polymorphism" title="View Patching django polymorphism">&laquo; Patching django polymorphism</a></li>
+							
+							
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Anthony Tresontani</span> - <span class="fn email">dev@tresontani.com</span></address></li>
+						<li class="github"><a href="http://github.com/anthony-tresontani/" rel="me">github.com/anthony-tresontani</a></li>
+						<li class="twitter"><a href="http://twitter.com/atresontani/" rel="me">twitter.com/atresontani</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://layouts-the.me">the_minimum</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/Django/2012/09/12/wka-django-orm-limitations" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+</body>
+</html>
+

@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>Anthony Tresontani blog</title>
+ <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
+ <link href="http://anthony-tresontani.github.com"/>
+ <updated>2012-09-13T08:42:47+02:00</updated>
+ <id>http://anthony-tresontani.github.com</id>
+ <author>
+   <name>Anthony Tresontani</name>
+   <email>dev@tresontani.com</email>
+ </author>
+
+ 
+ <entry>
+   <title>Workaround Django ORM limitation - create views</title>
+   <link href="http://anthony-tresontani.github.com/Django/2012/09/12/wka-django-orm-limitations"/>
+   <updated>2012-09-12T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Django/2012/09/12/wka-django-orm-limitations</id>
+   <content type="html">&lt;p&gt;I faced this problem yesteday.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;------------------      --------------      ------------------
+| Recommendation |      | Product    |      | Promotion      |
+------------------      --------------      ------------------
+| ID             |  |-&amp;gt; | ID         | &amp;lt;-|  | ID             |
+| Product        | -|   |            |   |- | Product        |
+------------------      --------------      ------------------&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and I needed to sort promotion by the presence of recommendations, ie &amp;#8220;Promotion were a recommendation exists should be first&amp;#8221;.&lt;/p&gt;
+
+&lt;h2 id='the_django_way'&gt;The Django way&lt;/h2&gt;
+
+&lt;p&gt;I still haven&amp;#8217;t found a proper way to do this with plain Django. But, if one solution exists, that would be:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Build 2 querysets and merge them by any way (Merging a queryset is quite painful). Problem: code messy + lose the queryset for a list&lt;/li&gt;
+
+&lt;li&gt;For any &lt;code&gt;promotion&lt;/code&gt;, do a query to get the recommendation. Problem: performance&lt;/li&gt;
+
+&lt;li&gt;Use extra. Problem: Never managed to do it, unreadable and hard to maintain&lt;/li&gt;
+
+&lt;li&gt;Raw SQL. Problem: We have many other filters to apply + lose the queryset for a rawQuerySet&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id='the_better_solution'&gt;The better solution&lt;/h2&gt;
+
+&lt;p&gt;What if we already have &lt;code&gt;promotions&lt;/code&gt; and &lt;code&gt;recommendations&lt;/code&gt; info in the same table, that would be easier. That&amp;#8217;s what a view is designed for. Providing up-to-date information coming from other tables.&lt;/p&gt;
+
+&lt;p&gt;Django works nicely with views since 1.1. What you want is to add the ID of &lt;code&gt;Recommendation&lt;/code&gt; to the &lt;code&gt;promotion&lt;/code&gt; table and if there is no match, add Null. That&amp;#8217;s a LEFT JOIN.&lt;/p&gt;
+
+&lt;p&gt;That&amp;#8217;s done with:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;DROP VIEW my_view
+CREATE VIEW my_view AS
+    SELECT 
+        promotion.*, recommendation.ID
+    FROM
+        promotion LEFT JOIN recommendation
+        ON promotion.product == recommendation.product&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, to avoid duplication, our &lt;code&gt;promotion and recommendation view&lt;/code&gt; should extend the same base class &lt;code&gt;Promotion&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class AbstractPromotion(models.Model):
+    product = models.ForeignKey(Product, related_name=&amp;quot;%(class)s&amp;quot;)    #(1)
+ 
+    class Meta:
+        abstract = True
+
+class Promotion(AbstractPromotion): pass
+
+class PromotionView(AbstractPromotion):
+    recommendation_id = models.IntegerField()     # (2)
+
+    class Meta:
+        ordering = [&amp;quot;recommendation_id&amp;quot;]     # (3)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;(1) You need to have different related names to not have Django complaining. That&amp;#8217;s the way to do. More explications, &lt;a href='https://docs.djangoproject.com/en/dev/topics/db/models/#s-be-careful-with-related-name'&gt;read the Django doc about that&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;(2) I haven&amp;#8217;t tested it with a ForeignKey but I don&amp;#8217;t see why that wouldn&amp;#8217;t work.&lt;/p&gt;
+
+&lt;p&gt;(3) That was our main problem and we fixed it.&lt;/p&gt;
+
+&lt;h2 id='job_done'&gt;Job done?&lt;/h2&gt;
+
+&lt;p&gt;We fixed the problem nicely but now we should be able to integrate this on our workflow to not break our automated deployment or testing.&lt;/p&gt;
+
+&lt;p&gt;How to create automatically this view ? The answer is &lt;strong&gt;SOUTH&lt;/strong&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def forwards(self, orm):
+    db.execute(&amp;quot;DROP VIEW IF EXISTS my_view&amp;quot;)    #(1)
+    db.execute(&amp;quot;&amp;quot;&amp;quot;CREATE VIEW my_view AS
+                      SELECT
+                          promotion.*, recommendation.ID
+                      FROM
+                          promotion LEFT JOIN recommendation
+                      ON promotion.product == recommendation.product
+               &amp;quot;&amp;quot;&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Why not &amp;#8220;CREATE VIEW OR REPLACE&amp;#8221;? simply because that&amp;#8217;s not compatible with &lt;a href='http://www.sqlite.org/lang_createview.html'&gt;sqlite&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Patching django polymorphism</title>
+   <link href="http://anthony-tresontani.github.com/Python/2012/09/11/django-polymorphism"/>
+   <updated>2012-09-11T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Python/2012/09/11/django-polymorphism</id>
+   <content type="html">&lt;h2 id='remember_oop'&gt;Remember OOP&lt;/h2&gt;
+
+&lt;p&gt;For the one who don&amp;#8217;t remember what is the abstract notion of &lt;a href='http://en.wikipedia.org/wiki/Polymorphism_in_object-oriented_programming'&gt;polymorphism&lt;/a&gt;. Here is a reminder:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Duck(object):
+    def quack(self):
+        print &amp;quot;QUACK&amp;quot;
+
+class FrenzyDuck(Duck):
+    def quack(self):
+        print &amp;quot;QUACK&amp;quot; * 4
+
+ducks = [Duck(), FrenzyDuck()]
+for duck in ducks:
+    duck.quack()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;And you will get:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;QUACK&amp;quot;
+&amp;quot;QUACKQUACKQUACKQUACK&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Now, if we translate this in a Django way:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Duck(models.Model):
+    name = models.CharField(max_length=15)
+    def quack(self):
+        print &amp;quot;QUACK&amp;quot;
+
+class FrenzyDuck(Duck):
+    def quack(self):
+        print &amp;quot;QUACK&amp;quot; * 4
+
+fifi = Duck.objects.create(name=&amp;quot;fifi&amp;quot;)
+loulou = FrenzyDuck.objects.create(name=&amp;quot;loulou&amp;quot;)
+
+fifi.quack()
+loulou.quack()
+
+for duck in Duck.objects.all():
+    duck.quack()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;you get:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;QUACK&amp;quot;
+&amp;quot;QUACKQUACKQUACKQUACK&amp;quot;
+&amp;quot;QUACK&amp;quot;
+&amp;quot;QUACK&amp;quot;    # Should have been &amp;quot;QUACKQUACKQUACKQUACK&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Django provides some mechanisms to emulate polymorphism, but that works only in some restricted cases. Why doesn&amp;#8217;t Django call the right method? Cause Django don&amp;#8217;t remember and we didn&amp;#8217;t give Django a way to remember.&lt;/p&gt;
+
+&lt;p&gt;In the database, we would have something like that:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;gt; select * from duck_duck;
+ID | NAME
+---------
+1  | fifi
+2  | loulou&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There is obviously nothing which says &amp;#8220;Loulou is more than a duck, he is a frenzy duck&amp;#8221;.&lt;/p&gt;
+
+&lt;h2 id='why_you_should_care'&gt;Why you should care?&lt;/h2&gt;
+
+&lt;p&gt;That doesn&amp;#8217;t seem to be such a big deal.&lt;/p&gt;
+
+&lt;p&gt;I am working in a company where we build e-commerce websites. Different kinds of products have different behavior. We can have:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Normal product&lt;/li&gt;
+
+&lt;li&gt;Product grouped together, like multiple sizes T-shirt&lt;/li&gt;
+
+&lt;li&gt;Customisable product, like a T-shirt where you can define your own logo&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Our code would have looked like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def my_view(request, product):
+    if product.is_customised():
+       product.do_customised_things()
+    elif product.is_grouped():
+       product.do_grouped_things()
+    else:
+       product.do_normal_things()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Not really a sexy code. With polymorphism, we would have:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def my_view(request, product):
+    product.do_things()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Much better.&lt;/p&gt;
+
+&lt;p&gt;We also have custom display of theses products, eg a template can look like:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{% for product in products %}
+    {% if product.is_customised %}
+        {% include &amp;quot;customised.html&amp;quot; %}
+    {% elif product.is_grouped %}
+        {% include &amp;quot;grouped.html&amp;quot; %}
+    {% else %}
+        {% include &amp;quot;normal.html&amp;quot; %}
+{% endfor %}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;why not:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{% for product in products %}
+    {% include product.template_name %}
+{% endfor %}&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;#8217;s shorter, more DRY and easier to maintain. I want that in my project.&lt;/p&gt;
+
+&lt;h2 id='solution'&gt;Solution&lt;/h2&gt;
+
+&lt;p&gt;If we want fully support polymorphism, we should find a way to tell Django which object is of which class. From here, you can find many solutions, most of them relying on storing the real class in a table.&lt;/p&gt;
+
+&lt;p&gt;We have an original approach. Most of the time, you know the type of object you have indirectly because of another attribute having a particular value. For example, a grouped product will have is_group value set to True. IE, there are some rules in your system which allow you to know the real class of an object.&lt;/p&gt;
+
+&lt;p&gt;Now, we should find a way to let Django know these rules. The &lt;code&gt;get_proxy_class&lt;/code&gt; pattern (purely invented for the sake of this article).&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;from django.db import models
+from django.db.models.signals import post_init
+from django.dispatch.dispatcher import receiver
+
+class Duck(models.Model):
+    name = models.CharField(max_length=15)
+    def quack(self):
+        print &amp;quot;QUACK&amp;quot;
+
+    def _get_proxy_class(self):     #(1)
+        if self.name == &amp;quot;loulou&amp;quot;:
+            return FrenzyDuck
+        return Duck
+
+class FrenzyDuck(Duck):
+    def quack(self):
+        print &amp;quot;QUACK&amp;quot; * 4
+
+    class Meta:                      #(2)
+        proxy = True
+
+@receiver(post_init)                 #(3)
+def update_proxy_object(sender, **kwargs):
+    instance = kwargs[&amp;#39;instance&amp;#39;]
+    if hasattr(instance, &amp;quot;_get_proxy_class&amp;quot;) and not instance._meta.proxy:
+        instance.__class__ = instance._get_proxy_object()
+
+fifi = Duck.objects.create(name=&amp;quot;fifi&amp;quot;)
+loulou = FrenzyDuck.objects.create(name=&amp;quot;loulou&amp;quot;)
+
+fifi.quack()
+loulou.quack()
+
+for duck in Duck.objects.all():
+    duck.quack()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;now, you get:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;quot;QUACK&amp;quot;
+&amp;quot;QUACKQUACKQUACKQUACK&amp;quot;
+&amp;quot;QUACK&amp;quot;
+&amp;quot;QUACKQUACKQUACKQUACK&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here are some explanations:&lt;/p&gt;
+
+&lt;p&gt;(1) You define a method which knows which class should be returned depending on some rules.&lt;/p&gt;
+
+&lt;p&gt;(2) Your subclass should be a proxy. That&amp;#8217;s also working with real subclass, but I would avoid using it as you may have object not completely initialized and it&amp;#8217;s a nightmare to debug.&lt;/p&gt;
+
+&lt;p&gt;(3) When the object is initialized by Django, if the get_proxy_class is defined, we cast the object. We do that only if the object is not already a proxy.&lt;/p&gt;
+
+&lt;p&gt;With that solution, you can now have fully featured polymorphism at no extra (DB) cost.&lt;/p&gt;
+
+&lt;h2 id='too_good_to_be_real'&gt;Too good to be real?&lt;/h2&gt;
+
+&lt;p&gt;As any solution, there are some trade-offs. We are using it in &lt;a href='http://www.tangentlabs.co.uk/'&gt;tangentlabs&lt;/a&gt; and we get great benefits from it. But there is still:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;You cannot easily define model with different data. We tried and we failed, spending many hours trying to understand why this object is badly initialized.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;Your main class is responsible to provide this mechanism, IE your parent class knows all its children. That would prevent to use this mechanism for an external application. This limitation can be easily worked around by providing a function external to the class, like:&lt;/p&gt;
+
+&lt;p&gt;def get_proxy_class(instance): if isinstance(instance, Duck): &amp;#8230; previous code &amp;#8230;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That&amp;#8217;s it.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Producing outcome</title>
+   <link href="http://anthony-tresontani.github.com/Thoughts/2012/09/10/producing-outcome"/>
+   <updated>2012-09-10T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Thoughts/2012/09/10/producing-outcome</id>
+   <content type="html">&lt;h2 id='producing_outcome__how_to_be_a_great_developer'&gt;Producing Outcome - How to be a great developer.&lt;/h2&gt;
+
+&lt;p&gt;I am, like you, a kind of passionate developer. I spend my free time digging the internet, programming on personnal projects, increasing my programming skills.&lt;/p&gt;
+
+&lt;p&gt;I am still bad developer. I still feel a degree of magnitude worse than top Django developers. Are they 10X better and if yes, how do that manage to be that good? I don&amp;#8217;t believe in natural abilities and I don&amp;#8217;t want to explain their supremacy by a genetic/cultural reason. Work overtake abilities 99% of the time. Smart work even better.&lt;/p&gt;
+
+&lt;p&gt;I noticed a common pattern when seeing my actual manager(&lt;a href='http://www.codeinthehole.com'&gt;@codeinthehole&lt;/a&gt;) growing as a python developer.&lt;/p&gt;
+
+&lt;p&gt;All the top-notched developer spend their time on &lt;em&gt;producing output&lt;/em&gt;. Whatever they do at work or for fun leads tends to maximize benefit, even if they might not be aware themself, even if that may not be their motivations.&lt;/p&gt;
+
+&lt;h3 id='valuable_outputs'&gt;Valuable outputs&lt;/h3&gt;
+
+&lt;p&gt;Sounds like a financial course. But what is valuable for finance, eg money, is only a subset of what is valuable for a developer. I left a well paid job as an IT guy in financial companies to get a funny web dev job, and that choice was valuable.&lt;/p&gt;
+
+&lt;p&gt;What kinds of output can we product which is valuable. Most of us don&amp;#8217;t think we have anything valuable. Things valuable are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Things increasing money&lt;/li&gt;
+
+&lt;li&gt;Things increasing visibility&lt;/li&gt;
+
+&lt;li&gt;Things increasing reputation (as a developer)&lt;/li&gt;
+
+&lt;li&gt;Things which increase targeted knowledge (sorry guys, reading all hackernews article is not really valuable)&lt;/li&gt;
+
+&lt;li&gt;Things which increase opportunities&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Increase money&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Obvious but hard to achieve. All the others may have an impact on this one. Getting a better salary is one way. Doing some freelancing is another one. When you have a good reputation/visibility, that should be easier.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Increase visibility&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We are unknown. Lost into thousands of other devs. Getting visibility is one problematic a dev should try to solve, patiently, but other time. When your next awesome company will contact you for a new job offer, they will try to get some info about you. Even better, you may have done something people need and hire you for that. That must be already the case but if nobody know, that&amp;#8217;s as useless as having done nothing. Give what you&amp;#8217;ve done to the world but do it well. README, docs, easy installation, tests, package your stuff properly and ease people using it life.&lt;/p&gt;
+
+&lt;p&gt;Write blogs, open source your best tool, participate in stack overflow, tweet dev tips.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Increase reputation&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;There is things which gives you credit. Being Flask author (&lt;a href='http://lucumr.pocoo.org/'&gt;@armin ronacher&lt;/a&gt;) gives you better credit when you try to sell yourself as a Flask expert (just an example, no fact here). Same if you are a Django core developer. Not that&amp;#8217;s easy to do. There is another which is easier, speaks at a conference or a meetup group on a subject you know well. You will get extra visibility, for sure, but you get more than that. You will be seen as a top developer, at least, by people who liked your talk. I&amp;#8217;ve seen many Django talks at DjangoCon and DJUGL, 95% of the speakers where top developers, at least according to me.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Increase knowledge&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;That&amp;#8217;s my favorite occupation, learning new stuffs and ready about new stuffs. Useless most of the time, incredibily useless sometimes. I get great benefit from actively learning Django before I moved to London. But that was targeted and deep study, not ready some random blog post on the internet. You should focus on valuable knowledge, something which brings you later benefits. Any other knowledge is not to be prohibited, but it&amp;#8217;s not work, it&amp;#8217;s pleasure.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Increase opportunities&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;You may all think of becoming rich with the new unavoidable website or other projects. Meeting right people help and can foster that incredibly. Meeting people is valuable. Great devs meet the others.&lt;/p&gt;
+
+&lt;p&gt;Great devs were newbee before. You don&amp;#8217;t have to be great to start sharing, creating tool or whatever. You will become great doing it. You did already most of the work getting the knowledge and programming, facing loads of issues and exploring the net. You only some extra time allocated to share this time, you can start to become great.&lt;/p&gt;
+
+&lt;p&gt;And stop read that, this is definitly not valuable.&lt;/p&gt;
+
+&lt;p&gt;Btw, after that post, I am &amp;#8220;Great level 1&amp;#8221;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Django pratical test tool</title>
+   <link href="http://anthony-tresontani.github.com/Python/2012/01/06/django-pratical-testing"/>
+   <updated>2012-01-06T00:00:00+01:00</updated>
+   <id>http://anthony-tresontani.github.com/Python/2012/01/06/django-pratical-testing</id>
+   <content type="html">&lt;p&gt;Testing Django may seems complicated sometimes, and especially with some django features full of encapsulation. This can be easily fixed by some python tricks.&lt;/p&gt;
+
+&lt;h2 id='testing_an_admin_function'&gt;Testing an admin function&lt;/h2&gt;
+
+&lt;p&gt;Admin classes are initialized by Django directly. The trick here is to override the init method.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def setUp(self):
+    MyAdminClass.__init__ = lambda x: None
+    my_admin_object = MyAdminClass()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='testing_a_template_tag'&gt;Testing a template tag&lt;/h2&gt;
+
+&lt;p&gt;The same kind of trick can be applied to test template tag with parameters.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def new_init(self, value, user):
+    self.value = value
+    self.user = user
+
+def setUp(self):
+    MyTemplateTagNode.__init__ = new_init
+    value = &amp;quot;my value&amp;quot;
+    my_user = User.objects.get(id=1)
+    node = MyTemplateTagNode(my_value, my_user))&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='testing_complex_view'&gt;Testing complex view&lt;/h2&gt;
+
+&lt;p&gt;Sometimes some view may rely on external services or request and you don&amp;#8217;t want to rely on anything external when performing unit tests.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyComplexView(BaseView):
+
+     det get(self, *args, **kwargs):
+          ...
+          my_external_object = ExternalObject()
+          ...&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You will need sometimes to redesign your code especially to be able to test it.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class MyComplexView(BaseView):
+
+    def get_external_object(self):
+        return ExternalObject()
+
+     det get(self, *args, **kwargs):
+          ...
+          my_external_object = self.get_external_object()
+          ...&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then, in your setup method, just do:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def get_external_object(self):
+    # Return an object implementing the right protocol
+    return MockExternalObject()
+
+def setup(self):
+    MyComplexView.get_external_object = get_external_object&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='testing_dynamic_type_creation'&gt;Testing dynamic type creation&lt;/h2&gt;
+
+&lt;p&gt;If you need to test an exception is raised when a class in defined (Imagine something like django model) you will have to use the type trick.&lt;/p&gt;
+
+&lt;p&gt;Encapsulate your class creation in a function (sample extract from the csv_importer application):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def create_unexpected_model():
+    return type(&amp;#39;TestCsvDBUnmatchingModel&amp;#39;, CsvModel, {&amp;#39;name&amp;#39;: CharField(unexpected=True)})&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;then you can use assertRaises&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;self.assertRaises(ValueError, create_unexpected_model)    &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='handling_data'&gt;Handling data&lt;/h2&gt;
+
+&lt;p&gt;On a growing project, managing data through fixture can be really painful. Easy with django-dynamic-fixture.&lt;/p&gt;
+
+&lt;p&gt;A good advice is to create your own service to wrap the data creation into a more readable and usable API usage.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;user = GenerateUser().create_admin()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='testing_email_content_and_formatting'&gt;Testing email content and formatting&lt;/h2&gt;
+
+&lt;p&gt;By default, django override some settings when using emails in testing. If you need to automatically generate email through a smtp server, you will have to change the settings just before performing the test.&lt;/p&gt;
+
+&lt;p&gt;For this, I use the following context manager:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class EmailSettingChange(object):
+    &amp;quot;&amp;quot;&amp;quot; 
+    Change the email setting to not use the locmem backend
+    but send real email
+    &amp;quot;&amp;quot;&amp;quot;
+
+    def __init__(self):
+	self.original_email_backend = settings.EMAIL_BACKEND
+
+    def __enter__(self):
+	if hasattr(settings, &amp;#39;TEST_SEND_EMAIL&amp;#39;) and settings.TEST_SEND_EMAIL:
+	    settings.EMAIL_BACKEND = settings.TEST_SEND_EMAIL_CONF[&amp;#39;EMAIL_BACKEND&amp;#39;]
+	    settings.EMAIL_HOST = settings.TEST_SEND_EMAIL_CONF[&amp;#39;EMAIL_HOST&amp;#39;]
+	    settings.EMAIL_HOST_USER = settings.TEST_SEND_EMAIL_CONF[&amp;#39;EMAIL_HOST_USER&amp;#39;]
+	    settings.EMAIL_HOST_PASSWORD = settings.TEST_SEND_EMAIL_CONF[&amp;#39;EMAIL_HOST_PASSWORD&amp;#39;]
+	    settings.EMAIL_PORT = settings.TEST_SEND_EMAIL_CONF[&amp;#39;EMAIL_PORT&amp;#39;]
+	    settings.EMAIL_USE_TLS = settings.TEST_SEND_EMAIL_CONF[&amp;#39;EMAIL_USE_TLS&amp;#39;]
+
+    def __exit__(self, type, value, tb):
+	settings.EMAIL_BACKEND = self.original_email_backend&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id='testing_rollback'&gt;Testing rollback&lt;/h2&gt;
+
+&lt;p&gt;If you need to test than rollbacking is working correctly in your application, you can&amp;#8217;t do that with a django test case, you have to use a TransactionTestCase. Take care to manually commit at the end of your setup method.&lt;/p&gt;
+
+&lt;p&gt;More information in the &lt;a href='https://docs.djangoproject.com/en/dev/topics/testing/#django.test.TransactionTestCase'&gt;django doc&lt;/a&gt;&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Packaging a python app</title>
+   <link href="http://anthony-tresontani.github.com/Python/2012/01/05/pythonist-open-source-packaging"/>
+   <updated>2012-01-05T00:00:00+01:00</updated>
+   <id>http://anthony-tresontani.github.com/Python/2012/01/05/pythonist-open-source-packaging</id>
+   <content type="html">&lt;p&gt;or what you should know to package a python application.&lt;/p&gt;
+
+&lt;p&gt;This blog is about the easiest place to put your code and do not fit for big project. But if you have a really nice open source personnal project and want to share it with the community, it&amp;#8217;s a good starting point.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Put in on github&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;The first place where you project should be visible is on GitHub. Just signup on github if not already done and create a new repo for your project.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Document it !&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Even obvious usage of your package should be documented for new python user. The easiest way is readthedoc.org.&lt;/p&gt;
+
+&lt;p&gt;It rely mainly on sphinx documentation. You can find everything you need &lt;a href='http://sphinx.pocoo.org/'&gt;here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Once done, sign in and set your project to your github repo.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Pypi&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Be finding a default setup.py, hacking it a bit, sign in pypi and run:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python setup.py register
+python setup.py sdist upload&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;That&amp;#8217;s it.&lt;/p&gt;
+
+&lt;p&gt;You will be amazed of how many people will start downloading your code (and maybe even using it).&lt;/p&gt;</content>
+ </entry>
+ 
+ 
+</feed>
