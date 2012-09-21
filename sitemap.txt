@@ -7,6 +7,7 @@ http://anthony-tresontani.github.com/tags.html
 http://anthony-tresontani.github.com/index.html
 http://anthony-tresontani.github.com/pages.html
 
+http://anthony-tresontani.github.com/Django/2012/09/20/multilingual-search
 http://anthony-tresontani.github.com/Django/2012/09/12/wka-django-orm-limitations
 http://anthony-tresontani.github.com/Python/2012/09/11/django-polymorphism
 http://anthony-tresontani.github.com/Thoughts/2012/09/10/producing-outcome

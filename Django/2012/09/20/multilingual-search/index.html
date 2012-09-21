@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Multilingual search in Django with Haystack</title>
+	<meta name="author" content="Anthony Tresontani">
+	<link href='/assets/themes/the-minimum/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Multilingual search in Django with Haystack" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<p class="logo"><a href="/">Anthony Tresontani blog</a></p>
+				<nav class="nav-global">
+					<ul>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="page"><a href="/pages.html">pages</a></li>
+						<li class="category"><a href="/categories.html">categories</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Multilingual search in Django with Haystack</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<h1 id='multilingual_search_in_django_with_haystack'>Multilingual search in Django with Haystack</h1>
+
+<p>When you build a website for a swiss company, like we do at tangent, that&#8217;s likely you would need to perform search in 3 languages.</p>
+
+<p>There is multiple way to perform multilingual search, and Steve Kearns explains that in this <a href='http://www.slideshare.net/lucenerevolution/steve-kearns-multilingualsearcheurocon2011'>slideshare</a></p>
+
+<p>We chose to implement the solution at indexing time, and that was, unpredictabily easy.</p>
+
+<h1 id='the_solution'>The solution</h1>
+
+<p>The solution is really simple, let say you want to index a book title in 3 languages: german, french and italian. Your book will look like:</p>
+
+<pre><code>class Book(models.Model):
+    title_de = models.CharField(max_length=100)
+    title_fr = models.CharField(max_length=100)
+    title_it = models.CharField(max_length=100)</code></pre>
+
+<p>Your Haystack index will look like:</p>
+
+<pre><code>class BookIndex(indexes.RealTimeSearchIndex, indexes.Indexable):
+    title =  indexes.CharField(document=True)</code></pre>
+
+<p>At indexing time, we will send an index to solr for each language to a specific solr core.</p>
+
+<pre><code>------------        &quot;Mein Buch&quot; ---|    ------------
+| SOLR FR  |&lt;------ &quot;Mon livre&quot;    ----&gt;| SOLR DE  |
+------------        &quot;Mio libro&quot;         ------------
+                         |
+                         |
+                         V
+                    ------------
+                    | SOLR IT  |
+                    ------------</code></pre>
+
+<p>At query time, we will only query the core matching our language:</p>
+
+<pre><code>                          ------------
+    &quot;Les miserables&quot; ----&gt;| SOLR FR  | ---&gt; French results 
+                          ------------</code></pre>
+
+<h1 id='implementation'>Implementation</h1>
+
+<h2 id='1_config'>1. Config</h2>
+
+<p>Define your search engines in your configuration file</p>
+
+<pre><code>    HAYSTACK_CONNECTIONS = {
+        &#39;default&#39;:{
+            &#39;ENGINE&#39;: &#39;myproject.backend.MultilingualSolrEngine&#39;,
+            &#39;URL&#39;: &#39;http://127.0.0.1:8080/solr-en&#39;,
+            },
+        &#39;default_en&#39;:{
+            &#39;ENGINE&#39;: &#39;myproject.backend.MultilingualSolrEngine&#39;,
+            &#39;URL&#39;: &#39;http://127.0.0.1:8080/solr-en&#39;,
+            },
+        &#39;default_fr&#39;:{
+            &#39;ENGINE&#39;: &#39;myproject.backend.MultilingualSolrEngine&#39;,
+            &#39;URL&#39;: &#39;http://127.0.0.1:8080/solr-fr&#39;,
+            },
+        }</code></pre>
+
+<p>Each connection follows the same pattern, &#8221;&#60;name&gt;_&#60;language_code&gt;&#34;. Some of you may have notice the usage of a special backend, but that&#8217;s step 2.</p>
+
+<h2 id='2_add_the_backend'>2. Add the backend</h2>
+
+<p>Copy the following backend. This will do the job for indexation, publishing each content to all cores.</p>
+
+<pre><code>from django.conf import settings
+from django.utils import translation
+from haystack import connections
+from haystack.backends.solr_backend import SolrEngine, SolrSearchBackend, SolrSearchQuery
+from haystack.constants import DEFAULT_ALIAS
+
+def get_using(language, alias=DEFAULT_ALIAS):
+    new_using = alias + &quot;_&quot; + language
+    using = new_using if new_using in settings.HAYSTACK_CONNECTIONS else alias
+    return using
+
+class MultilingualSolrSearchBackend(SolrSearchBackend):
+    def update(self, index, iterable, commit=True, multilingual=True):
+        if multilingual:
+            initial_language = translation.get_language()[:2]
+            # retrieve unique backend name
+            backends = []
+            for language, __ in settings.LANGUAGES:
+                using = get_using(language, alias=self.connection_alias)
+                # Ensure each backend is called only once
+                if using in backends:
+                    continue
+                else:
+                    backends.append(using)
+                translation.activate(language)
+                backend = connections[using].get_backend()
+                backend.update(index, iterable, commit, multilingual=False)
+            translation.activate(initial_language)
+        else:
+            print &quot;[%s]&quot; % self.connection_alias
+            super(MultilingualSolrSearchBackend, self).update(index, iterable, commit)</code></pre>
+
+<p>If you run <code>update_index</code> now, you will see haystack updating indexes for all cores.</p>
+
+<h2 id='3_query_time_now'>3. Query time now!</h2>
+
+<p>To choose the right engine when querying solr through haystack, we should define our own SearchQuery and provide the right <code>using</code>.</p>
+
+<pre><code>class MultilingualSolrSearchQuery(SolrSearchQuery):
+    def __init__(self, using=DEFAULT_ALIAS):
+        language = translation.get_language()[:2]
+        using = get_using(language)
+        super(MultilingualSolrSearchQuery, self).__init__(using)</code></pre>
+
+<h2 id='4_link_everything_together_the_engine'>4. Link everything together, the engine</h2>
+
+<p>The engine job is to link the query and the backend and to provide an entry point.</p>
+
+<pre><code>class MultilingualSolrEngine(SolrEngine):
+    backend = MultilingualSolrSearchBackend
+    query = MultilingualSolrSearchQuery</code></pre>
+
+<h2 id='5_thats_it'>5. That&#8217;s it</h2>
+
+<p>There is nothing else to do. Just write your haystack views and indexes and everything without changing a single line of code.</p>
+
+<h1 id='downside'>Downside</h1>
+
+<p>There is no absolute solution, never. As the others, this one has few downsides. The ones I saw are:</p>
+
+<ul>
+<li>Many cores to manage, deploy and monitor</li>
+
+<li>Slow indexing. If you are using real time haystack indexes like we do, any time you update an instance of an indexed model, a signal trigger an update to the N cores, which significantly slow down the update. Most of the time, we care more about the query time than the update time. If you do, that might not be the right solution for you.</li>
+</ul>
+
+<p>You like this post. Follow me on twitter: @atresontani</p>
+					<div class="meta">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-09-20T00:00:00+02:00" datetime="2012-09-20T00:00:00+02:00" pubdate>
+							<span class="month"><abbr>September</abbr></span>
+							<span class="day">20</span>
+							<span class="year">2012</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/categories.html#Django-ref">
+    		Django <span>2</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Django-ref">Django <span>3</span></a></li>
+     
+    	<li><a href="/tags.html#Haystack-ref">Haystack <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Solr-ref">Solr <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Search-ref">Search <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="atresontani" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/atresontani" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    
+    var disqus_shortname = 'anthonytresontani'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->
+				
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/Django/2012/09/12/wka-django-orm-limitations" title="View Workaround Django ORM limitation - create views">&laquo; Workaround Django ORM limitation - create views</a></li>
+							
+							
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Anthony Tresontani</span> - <span class="fn email">dev@tresontani.com</span></address></li>
+						<li class="github"><a href="http://github.com/anthony-tresontani/" rel="me">github.com/anthony-tresontani</a></li>
+						<li class="twitter"><a href="http://twitter.com/atresontani/" rel="me">twitter.com/atresontani</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://layouts-the.me">the_minimum</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/Django/2012/09/20/multilingual-search" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34729308-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
