@@ -4,13 +4,105 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2012-09-21T06:28:09+02:00</updated>
+ <updated>2012-11-08T08:30:54+01:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
    <email>dev@tresontani.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Dear project managers, that's not so simple</title>
+   <link href="http://anthony-tresontani.github.com/Thoughts/2012/11/08/dear_pm_thats_not_so_simple"/>
+   <updated>2012-11-08T00:00:00+01:00</updated>
+   <id>http://anthony-tresontani.github.com/Thoughts/2012/11/08/dear_pm_thats_not_so_simple</id>
+   <content type="html">&lt;p&gt;We are all Agile now. I am an agile developer in an agile company working on agile projects. That can be anything else than all good but I spend my times figuring out what should be done.&lt;/p&gt;
+
+&lt;p&gt;As a developer, somebody through various agile tools tell me what should be done. The most accurate description you can expect to get would be something like:&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;We need a simple login page&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Thanks, I wouldn&amp;#8217;t have though a website need that.&lt;/p&gt;
+
+&lt;p&gt;What I&amp;#8217;d like to hear as a backend developer.&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;We need a page containing a login form with a username and a password. We will use SAML to validate credentials. A link provide a change password page where you can fill in your email address. Upon success, the user is redirected to his profile page. If the user has been flagged as XYZ, he should get a message saying &amp;#8220;You are flagged Mr!&amp;#8221;. If 3 failures occurs, the user is blocked and informed by a message.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Yeah, I know all that seems pretty obvious and most of them are obvious but:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;What if your project can accept email address as username?&lt;/li&gt;
+
+&lt;li&gt;Facebook or twitter login?&lt;/li&gt;
+
+&lt;li&gt;What if you should redirect to the home page?&lt;/li&gt;
+
+&lt;li&gt;What if you do not display the message?&lt;/li&gt;
+
+&lt;li&gt;What if you do not block the user?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You push to test, somebody test, notice or not something is wrong and deploy to stage or prod. Somebody notice that&amp;#8217;s wrong, create a ticket for you. You fix, deploy, they test and all fine. You think you are a bad developer, they think the same. Two complete loops because at the beginning, requirements was vague.&lt;/p&gt;
+
+&lt;h2 id='but_we_are_agile'&gt;But we are agile&lt;/h2&gt;
+
+&lt;p&gt;That is definitely not agile. That is a:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;problem in communication. That lacks accuracy and doesn&amp;#8217;t understand the context which should be used to describe the problem. That uses a user point of view instead of a technical point of view.&lt;/li&gt;
+
+&lt;li&gt;That&amp;#8217;s lazy thinking. By giving a simple &amp;#8220;we need a login page&amp;#8221;, you do not have to imagine the solution, think about the lifecycle, etc&amp;#8230; You have been lazy (like a dev).&lt;/li&gt;
+
+&lt;li&gt;Risky. What is an obvious way of doing something for a developer might not be obvious. Do you really want a command line login page?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Agile means you can change your mind later when you will have a better understand of what you need, a better view of what is ok, what is wrong. That doesn&amp;#8217;t mean the developer has to figure out what is the best thing to do knowing no detail about the task.&lt;/p&gt;
+
+&lt;p&gt;Anytime I have to figure out what should be done, I obviously lose coding time but that also break the flow, which mean even more time lost.&lt;/p&gt;
+
+&lt;h2 id='now_we_are_gonna_fix_that'&gt;Now, we are gonna fix that&lt;/h2&gt;
+
+&lt;p&gt;The solution starts by thinking harder about the problem and gathers as much information as possible before submitting your inquiry to the poor lost developer, but mainly, no developers told you what we really expect. The problem is wide but I am going to try.&lt;/p&gt;
+
+&lt;p&gt;Before requesting anything to a dev think about:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;The solution lifecycle&lt;/em&gt;. Where do you come from, where you are going after. Which conditions are required before performing the operation. ex: We received some information about users through an XML file. We were told, the user XYZ need to be set as &amp;#8220;blocked&amp;#8221; when the tag ABC is present and should stay &amp;#8220;blocked&amp;#8221; after even if this information is no more present . If you think about the lifecycle, you will spot there is a problem to &amp;#8220;unblock&amp;#8221; the user. How are we doing that?&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Validations and formatting&lt;/em&gt;. How do you expect values to be shown and what are we doing when they do not match that. ex: Number formatting, form validations, list/table sorting.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Admin interface and other tools&lt;/em&gt;. On a website especially, when you have a new kind of data, that&amp;#8217;s really likely that you should be able to manage that. ex: You would have the list of user, being able to inactivate them, change their password, etc&amp;#8230;&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Data source and exchange format&lt;/em&gt;. That&amp;#8217;s on the border of being too technical but if there is anything required, you should know. ex: lovely SOAP exchange, data coming from the XML file (maybe event tag XYZ), populated with the admin interface.&lt;/p&gt;
+&lt;/li&gt;
+
+&lt;li&gt;
+&lt;p&gt;&lt;em&gt;Calculation rules&lt;/em&gt;. When you have any kind of calculated values, knowing how that&amp;#8217;s calculated is helpful. That doesn&amp;#8217;t need to be a mathematical representation. ex: This value is the sum of average sell volumes for all users in that groups for the last 3 months from today date.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A slight improvement in the way requirements are handled might have a big impact on your project. You will still have bugs, developers not reading the specs or whatever but greater quality as input give greater output quality.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
+   <title>Pro-tips: one step to higher dev efficency</title>
+   <link href="http://anthony-tresontani.github.com/Tips/2012/09/27/protips"/>
+   <updated>2012-09-27T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Tips/2012/09/27/protips</id>
+   <content type="html">&lt;p&gt;I was not a professional developer one year ago. I was doing that for fun. Now, when I look back to my previous way of developing, there is few things that changed. Most of them are details, but details can have a great impact in your productivity.&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Multilingual search in Django with Haystack</title>
@@ -66,15 +158,19 @@
 &lt;pre&gt;&lt;code&gt;    HAYSTACK_CONNECTIONS = {
         &amp;#39;default&amp;#39;:{
             &amp;#39;ENGINE&amp;#39;: &amp;#39;myproject.backend.MultilingualSolrEngine&amp;#39;,
-            &amp;#39;URL&amp;#39;: &amp;#39;http://127.0.0.1:8080/solr-en&amp;#39;,
+            &amp;#39;URL&amp;#39;: &amp;#39;http://127.0.0.1:8080/solr-de&amp;#39;,
             },
-        &amp;#39;default_en&amp;#39;:{
+        &amp;#39;default_de&amp;#39;:{
             &amp;#39;ENGINE&amp;#39;: &amp;#39;myproject.backend.MultilingualSolrEngine&amp;#39;,
-            &amp;#39;URL&amp;#39;: &amp;#39;http://127.0.0.1:8080/solr-en&amp;#39;,
+            &amp;#39;URL&amp;#39;: &amp;#39;http://127.0.0.1:8080/solr-de&amp;#39;,
             },
         &amp;#39;default_fr&amp;#39;:{
             &amp;#39;ENGINE&amp;#39;: &amp;#39;myproject.backend.MultilingualSolrEngine&amp;#39;,
             &amp;#39;URL&amp;#39;: &amp;#39;http://127.0.0.1:8080/solr-fr&amp;#39;,
+            },
+        &amp;#39;default_it&amp;#39;:{
+            &amp;#39;ENGINE&amp;#39;: &amp;#39;myproject.backend.MultilingualSolrEngine&amp;#39;,
+            &amp;#39;URL&amp;#39;: &amp;#39;http://127.0.0.1:8080/solr-it&amp;#39;,
             },
         }&lt;/code&gt;&lt;/pre&gt;
 
