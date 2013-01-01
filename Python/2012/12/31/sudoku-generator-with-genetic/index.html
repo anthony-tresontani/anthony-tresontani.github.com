@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7 ie" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8 ie" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9 ie" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Generating valid sudokus with a genetic algorithm</title>
+	<meta name="author" content="Anthony Tresontani">
+	<link href='/assets/themes/the-minimum/css/style.css' rel="stylesheet" media="all">
+	<link href="http://feeds.feedburner.com/" rel="alternate" title="Generating valid sudokus with a genetic algorithm" type="application/atom+xml">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.0.6/modernizr.min.js"></script>
+</head>
+<body>
+
+<div id="page" class="hentry">
+	<header class="the-header">
+		<div class="unit-head">
+			<div class="unit-inner unit-head-inner">
+				<p class="logo"><a href="/">Anthony Tresontani blog</a></p>
+				<nav class="nav-global">
+					<ul>
+						<li class="archive"><a href="/archive.html">archive</a></li>
+						<li class="page"><a href="/pages.html">pages</a></li>
+						<li class="category"><a href="/categories.html">categories</a></li>
+						<li class="tag"><a href="/tags.html">tags</a></li>
+					</ul>
+				</nav>
+			</div><!-- unit-inner -->
+		</div><!-- unit-head -->
+	</header>
+	<div class="body" role="main">
+		<div class="unit-body">
+			<div class="unit-inner unit-body-inner">
+				<div class="entry-content">
+					
+<article class="unit-article layout-post">
+	<div class="unit-inner unit-article-inner">
+		<div class="content">
+			<header>
+				<div class="unit-head">
+					<div class="unit-inner unit-head-inner">
+						<h1 class="h2 entry-title">Generating valid sudokus with a genetic algorithm</h1>
+					</div><!-- unit-inner -->
+				</div><!-- unit-head -->
+			</header>
+
+			<div class="bd">
+				<div class="entry-content">
+					<h1 id='brute_force'>Brute force</h1>
+
+<p>We worked once at a code Dojo on how to generate some valid sudokus. The conclusion was &#8220;that&#8217;s not that simple&#8221; and especially when you try to figure out by yourself what could be an algorithm. In the 2 hours allocated to solve that problem, no team manage to get to an algorithm which do not &#8220;always&#8221; lead to a dead end (whatever your next choice, the sudoku would not be valid). Pure brute force didn&#8217;t work.</p>
+
+<p><strong>ROUND 1</strong> Sudoku 1 - Me 0.</p>
+
+<p>I met few months later &#8220;machine learning&#8221; through the really good book <a href='http://www.amazon.co.uk/Programming-Collective-Intelligence-Building-Applications/dp/0596529325'>&#8220;Programming Collective Intelligence&#8221;</a> and when I reached the chapter on genetic algorithm, I remembered I&#8217;ve been defeated by a sudoku generator problem.</p>
+
+<p>1,2,3 fight.</p>
+
+<h1 id='naive_algorithm'>Naive algorithm</h1>
+
+<p><a href='http://en.wikipedia.org/wiki/Genetic_algorithm'>Genetic algorithm</a> are a family of algorithm which mimic gene behaviour. That mutates and crossovers. A really simple explanation is you define a set of elements (called gene) which evolve during each iteration (called generation). To create a new generation, you have few possibilities:</p>
+
+<ul>
+<li>You mutate slighlty a gene</li>
+
+<li>You crossover two genes</li>
+
+<li>You create a new random gene</li>
+</ul>
+
+<p>You don&#8217;t really need to understand fully how that works to already get something which works if you get the right weapon to help you. Mine is <a href='https://github.com/blaa/PyGene'>PyGene</a>.</p>
+
+<p>After having read more than 5 pages on it, after having discovered PyGene library, I felt the outcome would be certain.</p>
+
+<p><strong>ROUND 2</strong></p>
+
+<p>You should start with a gene and PyGene provide many implementations for some common genes. Sudokus are somehow a list of 81 integers. I copied the demo_string_int.py example code and slighly customised the code to make it match my problem.</p>
+
+<p>The only real things to understand here is the fittest function. Knowing a try, that should return a positive number which match how far it is from the solution. In our case, how far from valid the sudoku is. You can&#8217;t only say &#8220;is valid True or False&#8221;, else the algorithm would not be able to compare 2 invalid solutions. They would be equally invalid.</p>
+
+<p>I like to use python set to check for validity. Assuming all numbers are between 1 and 9, a sudoku is valid if and only if all lines, columns and blocks contains 9 differents elements, ie if the set with all elements has a length of 9.</p>
+
+<p>To get something which return 0 if valid and a big number if there is many errors in the sudoku, you just need to substract the number of elements in the set from 9. If one number is missing, you get 1, if 2 you get 2, etc&#8230;</p>
+
+<pre><code>def fittest(sudoku):
+    result = 0
+        for l in sudoku:
+           line = set(l)
+           result += NB_VAL_LINE - len(line)
+        for i in range(NB_VAL_LINE):
+            column = set(line[i] for line in sudoku)
+            result += NB_VAL_LINE - len(column)
+        for x in range(NB_BLOCK):
+            for y in range(NB_BLOCK):
+                block = set(sudoku[x*NB_BLOCK + xshift][y*NB_BLOCK + yshift] for xshift in range(NB_BLOCK) for yshift in range(NB_BLOCK))
+                result += NB_VAL_LINE - len(block)
+        return result</code></pre>
+
+<p>The full code is available <a href='https://gist.github.com/4426427'>here</a>.</p>
+
+<p>The fight started. Best score is dropping quickly and&#8230;. You wait for almost ever. You could have win but that&#8217;s definitely too slow. After around 2 hours, more than 100000 generations, the best try has a score of 38 (0 is the target). Still far.</p>
+
+<p>Sudoku 2 - Me 0</p>
+
+<h1 id='clever_try'>Clever try</h1>
+
+<p>The previous failure can be explained quite easily. The algorithm was smart enough to generate a number between 1 and 9 for each gene, nothing more. Even if you already have a 9 in the row, the algorithm would try randomly a 9. We need to upgrade our weapon.</p>
+
+<p>Instead of having 81 integer values, what if we code a list of 9 lines with values from 1 to 9 shuffled. A mutation would not be a random number between 1 and 9 but a random permutation between numbers.</p>
+
+<p>We can&#8217;t rely anymore on the IntGene implementation provided by PyGene, we need to code our own. Fortunately, almost no other code has to be changed.</p>
+
+<pre><code>class LineGene(BaseGene):
+    def __add__(self, other):
+        return choice([self.value, other.value])
+
+    def mutate(self):
+        indexes = range(9)
+        shuffle(indexes)
+        x,y = indexes[:2]
+        self.value[x], self.value[y] = self.value[y], self.value[x]
+
+    def randomValue(self):
+        values = range(1,10)
+        shuffle(values)
+        return values</code></pre>
+
+<p>Three functions should be defined.</p>
+
+<ul>
+<li>How to generate a random value: let&#8217;s just shuffle a list of 1 to 9.</li>
+
+<li>How to mutate: let&#8217;s take two random indice between 0 and 8 and swap two elements.</li>
+
+<li>How to merge: let&#8217;s take one or the other gene, randomly.</li>
+</ul>
+
+<p><strong>ROUND 3</strong></p>
+
+<p>I got to the score 38 in 200 generations and 3 secondes. Much faster and stayed around 29 for ever (reached at 100 000+ generations).</p>
+
+<p>Sudoku 3 - Me 0</p>
+
+<p>There is plenty of parameters to play with. Not understanding deeply how genetic algorithms work do not allow you to tune them other than empirically. I changed many of them, started to understand some issues. Too much diversity and an average too far from my best score. I tuned and tuned again for more stability.</p>
+
+<p>29 at 2500 generations after few seconds. Much better.</p>
+
+<p>but my patience wouldn&#8217;t allow me to wait for days to get a valid result. After more than a night, the algorithm is now at 24. <a href='https://gist.github.com/4426452'>Full code here</a></p>
+
+<p>&#8230; Sudoku 4 - Me 0</p>
+					<div class="meta">
+						<p class="date-publish">
+							Published: 
+							<date class="date-pub" title="2012-12-31T00:00:00+01:00" datetime="2012-12-31T00:00:00+01:00" pubdate>
+							<span class="month"><abbr>December</abbr></span>
+							<span class="day">31</span>
+							<span class="year">2012</span>
+							</date>
+						</p>
+						<ul class="list-category list-linear">
+							<li class="list-head">category: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/categories.html#Python-ref">
+    		Python <span>4</span>
+    	</a></li>
+    
+  
+
+
+						</ul>
+						<ul class="list-tag list-linear">
+							<li class="list-head">tags: </li>
+							
+							
+
+
+  
+     
+    	<li><a href="/tags.html#Python-ref">Python <span>4</span></a></li>
+     
+    	<li><a href="/tags.html#Genetic algorithm-ref">Genetic algorithm <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Sudoku-ref">Sudoku <span>1</span></a></li>
+    
+  
+
+
+
+						</ul>
+					</div><!-- meta -->
+				</div><!-- entry-content -->
+				<div class="misc-content">
+					<div class="social">
+						<ul class="list-linear">
+							<li><div class="twitter-tweet"><a href="https://twitter.com/share" class="twitter-share-button" data-count="horizontal" data-via="atresontani" data-lang="en">Tweet</a></div></li>
+							<li><div class="twitter-follow"><a href="https://twitter.com/atresontani" class="twitter-follow-button" data-show-count="false" data-lang="en"></a></div></li>
+						</ul>
+					</div>
+					
+					
+
+
+  <div id="disqus_thread"></div>
+<script type="text/javascript">
+    
+    var disqus_shortname = 'anthonytresontani'; // required: replace example with your forum shortname
+    
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+
+
+				</div><!-- misc-content -->
+				
+			</div><!-- bd -->
+			<footer class="unit-foot">
+				<div class="unit-inner unit-foot-inner">
+					<nav class="pagination">
+						<ul>
+							
+							<li class="prev"><a class="internal" rel="prev"  href="/Thoughts/2012/11/08/dear_pm_thats_not_so_simple" title="View Dear project managers, that's not so simple">&laquo; Dear project managers, that's not so simple</a></li>
+							
+							
+							
+						</ul>
+					</nav>
+					<p class="gotop">
+						<a href="#page">Back to Top</a>
+					</p>
+				</div>
+			</footer>
+
+		</div><!-- content -->
+	</div><!-- unit-inner -->
+</article>
+
+
+				</div>
+			</div><!-- unit-inner -->
+		</div><!-- unit-body -->
+	</div><!-- body -->
+	<footer class="the-footer">
+		<div class="unit-foot">
+			<div class="unit-inner unit-foot-inner">
+				<div class="misc vcard">
+					<h4>about</h4>
+					<ul>
+						<li class="contact"><address><span class="author fn n">Anthony Tresontani</span> - <span class="fn email">dev@tresontani.com</span></address></li>
+						<li class="github"><a href="http://github.com/anthony-tresontani/" rel="me">github.com/anthony-tresontani</a></li>
+						<li class="twitter"><a href="http://twitter.com/atresontani/" rel="me">twitter.com/atresontani</a></li>
+						<li class="rss"><a href="http://feeds.feedburner.com/">Subscribe to RSS Feed</a></li>
+					</ul>
+				</div><!-- misc -->
+				<p class="licence">
+					Theme: <a href="http://layouts-the.me">the_minimum</a> based on <a href="http://jekyllbootstrap.com/">Jekyll-bootstrap</a>.<br>
+					Powered by <a href="https://github.com/mojombo/jekyll">Jekyll</a>.
+				</p>
+			</div><!-- unit-foot-inner -->
+		</div><!-- unit-foot -->
+	</footer>
+</div><!-- page -->
+<script>
+	(function(d, s) {
+		var js, fjs = d.getElementsByTagName(s)[0], load = function(url, id) {
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.src = url; js.id = id;
+		fjs.parentNode.insertBefore(js, fjs);
+		};
+	load('//platform.twitter.com/widgets.js', 'tweetjs');
+	// load('https://apis.google.com/js/plusone.js', 'gplus1js'); // Checkout http://j.mp/ApDgMr for usage html for this is <div class="g-plusone" data-size="medium"></div>
+	// load('//connect.facebook.net/en_US/all.js#xfbml=1', 'fbjssdk'); // Checkout http://j.mp/wZw2xR for using open graph protorol html for this is <div class="fb-like" data-href="/Python/2012/12/31/sudoku-generator-with-genetic" data-send="false" data-layout="button_count" data-width="450" data-show-faces="false" data-font="verdana"></div>
+	}(document, 'script'));
+</script>
+<script>
+/*! A fix for the iOS orientationchange zoom bug.Script by @scottjehl, rebound by @wilto. MIT License.*/
+(function(j){var i=j.document;if(!i.querySelectorAll){return}var l=i.querySelectorAll("meta[name=viewport]")[0],a=l&&l.getAttribute("content"),h=a+", maximum-scale=1.0",d=a+", maximum-scale=10.0",g=true,c=j.orientation,k=0;if(!l){return}function f(){l.setAttribute("content",d);g=true}function b(){l.setAttribute("content",h);g=false}function e(m){c=Math.abs(j.orientation);k=Math.abs(m.gamma);if(k>8&&c===0){if(g){b()}}else{if(!g){f()}}}j.addEventListener("orientationchange",f,false);j.addEventListener("deviceorientation",e,false)})(this);
+</script>
+
+  
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34729308-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
+</body>
+</html>
+
