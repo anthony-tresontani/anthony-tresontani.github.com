@@ -8,6 +8,7 @@ http://anthony-tresontani.github.com/index.html
 http://anthony-tresontani.github.com/feed/feed.xml
 http://anthony-tresontani.github.com/pages.html
 
+http://anthony-tresontani.github.com/Python/2012/12/31/sudoku-generator-with-genetic
 http://anthony-tresontani.github.com/Thoughts/2012/11/08/dear_pm_thats_not_so_simple
 http://anthony-tresontani.github.com/Tips/2012/09/27/protips
 http://anthony-tresontani.github.com/Django/2012/09/20/multilingual-search

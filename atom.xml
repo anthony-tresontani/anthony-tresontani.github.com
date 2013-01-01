@@ -4,13 +4,122 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2012-11-09T08:50:51+01:00</updated>
+ <updated>2013-01-01T11:37:35+01:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
    <email>dev@tresontani.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Generating valid sudokus with a genetic algorithm</title>
+   <link href="http://anthony-tresontani.github.com/Python/2012/12/31/sudoku-generator-with-genetic"/>
+   <updated>2012-12-31T00:00:00+01:00</updated>
+   <id>http://anthony-tresontani.github.com/Python/2012/12/31/sudoku-generator-with-genetic</id>
+   <content type="html">&lt;h1 id='brute_force'&gt;Brute force&lt;/h1&gt;
+
+&lt;p&gt;We worked once at a code Dojo on how to generate some valid sudokus. The conclusion was &amp;#8220;that&amp;#8217;s not that simple&amp;#8221; and especially when you try to figure out by yourself what could be an algorithm. In the 2 hours allocated to solve that problem, no team manage to get to an algorithm which do not &amp;#8220;always&amp;#8221; lead to a dead end (whatever your next choice, the sudoku would not be valid). Pure brute force didn&amp;#8217;t work.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;ROUND 1&lt;/strong&gt; Sudoku 1 - Me 0.&lt;/p&gt;
+
+&lt;p&gt;I met few months later &amp;#8220;machine learning&amp;#8221; through the really good book &lt;a href='http://www.amazon.co.uk/Programming-Collective-Intelligence-Building-Applications/dp/0596529325'&gt;&amp;#8220;Programming Collective Intelligence&amp;#8221;&lt;/a&gt; and when I reached the chapter on genetic algorithm, I remembered I&amp;#8217;ve been defeated by a sudoku generator problem.&lt;/p&gt;
+
+&lt;p&gt;1,2,3 fight.&lt;/p&gt;
+
+&lt;h1 id='naive_algorithm'&gt;Naive algorithm&lt;/h1&gt;
+
+&lt;p&gt;&lt;a href='http://en.wikipedia.org/wiki/Genetic_algorithm'&gt;Genetic algorithm&lt;/a&gt; are a family of algorithm which mimic gene behaviour. That mutates and crossovers. A really simple explanation is you define a set of elements (called gene) which evolve during each iteration (called generation). To create a new generation, you have few possibilities:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;You mutate slighlty a gene&lt;/li&gt;
+
+&lt;li&gt;You crossover two genes&lt;/li&gt;
+
+&lt;li&gt;You create a new random gene&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You don&amp;#8217;t really need to understand fully how that works to already get something which works if you get the right weapon to help you. Mine is &lt;a href='https://github.com/blaa/PyGene'&gt;PyGene&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;After having read more than 5 pages on it, after having discovered PyGene library, I felt the outcome would be certain.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;ROUND 2&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;You should start with a gene and PyGene provide many implementations for some common genes. Sudokus are somehow a list of 81 integers. I copied the demo_string_int.py example code and slighly customised the code to make it match my problem.&lt;/p&gt;
+
+&lt;p&gt;The only real things to understand here is the fittest function. Knowing a try, that should return a positive number which match how far it is from the solution. In our case, how far from valid the sudoku is. You can&amp;#8217;t only say &amp;#8220;is valid True or False&amp;#8221;, else the algorithm would not be able to compare 2 invalid solutions. They would be equally invalid.&lt;/p&gt;
+
+&lt;p&gt;I like to use python set to check for validity. Assuming all numbers are between 1 and 9, a sudoku is valid if and only if all lines, columns and blocks contains 9 differents elements, ie if the set with all elements has a length of 9.&lt;/p&gt;
+
+&lt;p&gt;To get something which return 0 if valid and a big number if there is many errors in the sudoku, you just need to substract the number of elements in the set from 9. If one number is missing, you get 1, if 2 you get 2, etc&amp;#8230;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;def fittest(sudoku):
+    result = 0
+        for l in sudoku:
+           line = set(l)
+           result += NB_VAL_LINE - len(line)
+        for i in range(NB_VAL_LINE):
+            column = set(line[i] for line in sudoku)
+            result += NB_VAL_LINE - len(column)
+        for x in range(NB_BLOCK):
+            for y in range(NB_BLOCK):
+                block = set(sudoku[x*NB_BLOCK + xshift][y*NB_BLOCK + yshift] for xshift in range(NB_BLOCK) for yshift in range(NB_BLOCK))
+                result += NB_VAL_LINE - len(block)
+        return result&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The full code is available &lt;a href='https://gist.github.com/4426427'&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;The fight started. Best score is dropping quickly and&amp;#8230;. You wait for almost ever. You could have win but that&amp;#8217;s definitely too slow. After around 2 hours, more than 100000 generations, the best try has a score of 38 (0 is the target). Still far.&lt;/p&gt;
+
+&lt;p&gt;Sudoku 2 - Me 0&lt;/p&gt;
+
+&lt;h1 id='clever_try'&gt;Clever try&lt;/h1&gt;
+
+&lt;p&gt;The previous failure can be explained quite easily. The algorithm was smart enough to generate a number between 1 and 9 for each gene, nothing more. Even if you already have a 9 in the row, the algorithm would try randomly a 9. We need to upgrade our weapon.&lt;/p&gt;
+
+&lt;p&gt;Instead of having 81 integer values, what if we code a list of 9 lines with values from 1 to 9 shuffled. A mutation would not be a random number between 1 and 9 but a random permutation between numbers.&lt;/p&gt;
+
+&lt;p&gt;We can&amp;#8217;t rely anymore on the IntGene implementation provided by PyGene, we need to code our own. Fortunately, almost no other code has to be changed.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class LineGene(BaseGene):
+    def __add__(self, other):
+        return choice([self.value, other.value])
+
+    def mutate(self):
+        indexes = range(9)
+        shuffle(indexes)
+        x,y = indexes[:2]
+        self.value[x], self.value[y] = self.value[y], self.value[x]
+
+    def randomValue(self):
+        values = range(1,10)
+        shuffle(values)
+        return values&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Three functions should be defined.&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;How to generate a random value: let&amp;#8217;s just shuffle a list of 1 to 9.&lt;/li&gt;
+
+&lt;li&gt;How to mutate: let&amp;#8217;s take two random indice between 0 and 8 and swap two elements.&lt;/li&gt;
+
+&lt;li&gt;How to merge: let&amp;#8217;s take one or the other gene, randomly.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;ROUND 3&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;I got to the score 38 in 200 generations and 3 secondes. Much faster and stayed around 29 for ever (reached at 100 000+ generations).&lt;/p&gt;
+
+&lt;p&gt;Sudoku 3 - Me 0&lt;/p&gt;
+
+&lt;p&gt;There is plenty of parameters to play with. Not understanding deeply how genetic algorithms work do not allow you to tune them other than empirically. I changed many of them, started to understand some issues. Too much diversity and an average too far from my best score. I tuned and tuned again for more stability.&lt;/p&gt;
+
+&lt;p&gt;29 at 2500 generations after few seconds. Much better.&lt;/p&gt;
+
+&lt;p&gt;but my patience wouldn&amp;#8217;t allow me to wait for days to get a valid result. After more than a night, the algorithm is now at 24. &lt;a href='https://gist.github.com/4426452'&gt;Full code here&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&amp;#8230; Sudoku 4 - Me 0&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Dear project managers, that's not so simple</title>
