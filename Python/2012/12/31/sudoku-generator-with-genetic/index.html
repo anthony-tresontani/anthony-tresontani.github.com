@@ -51,7 +51,7 @@
 				<div class="entry-content">
 					<h1 id='brute_force'>Brute force</h1>
 
-<p>We worked once at a code Dojo on how to generate some valid sudokus. The conclusion was &#8220;that&#8217;s not that simple&#8221; and especially when you try to figure out by yourself what could be an algorithm. In the 2 hours allocated to solve that problem, no team manage to get to an algorithm which do not &#8220;always&#8221; lead to a dead end (whatever your next choice, the sudoku would not be valid). Pure brute force didn&#8217;t work.</p>
+<p>We worked once at a code Dojo on how to generate some valid sudokus. The conclusion was &#8220;that&#8217;s not that simple&#8221; and especially when you try to figure out by yourself what could be an algorithm. In the 2 hours allocated to solve that problem, no team manage to get to an algorithm which do not &#8220;always&#8221; lead to a dead-end (whatever your next choice, the sudoku would not be valid). Pure brute force didn&#8217;t work.</p>
 
 <p><strong>ROUND 1</strong> Sudoku 1 - Me 0.</p>
 
@@ -64,7 +64,7 @@
 <p><a href='http://en.wikipedia.org/wiki/Genetic_algorithm'>Genetic algorithm</a> are a family of algorithm which mimic gene behaviour. That mutates and crossovers. A really simple explanation is you define a set of elements (called gene) which evolve during each iteration (called generation). To create a new generation, you have few possibilities:</p>
 
 <ul>
-<li>You mutate slighlty a gene</li>
+<li>You mutate slightly a gene</li>
 
 <li>You crossover two genes</li>
 
@@ -77,13 +77,13 @@
 
 <p><strong>ROUND 2</strong></p>
 
-<p>You should start with a gene and PyGene provide many implementations for some common genes. Sudokus are somehow a list of 81 integers. I copied the demo_string_int.py example code and slighly customised the code to make it match my problem.</p>
+<p>You should start with a gene and PyGene provide many implementations for some common genes. Sudokus are somehow a list of 81 integers. I copied the demo_string_int.py example code and slightly customised the code to make it match my problem.</p>
 
 <p>The only real things to understand here is the fittest function. Knowing a try, that should return a positive number which match how far it is from the solution. In our case, how far from valid the sudoku is. You can&#8217;t only say &#8220;is valid True or False&#8221;, else the algorithm would not be able to compare 2 invalid solutions. They would be equally invalid.</p>
 
-<p>I like to use python set to check for validity. Assuming all numbers are between 1 and 9, a sudoku is valid if and only if all lines, columns and blocks contains 9 differents elements, ie if the set with all elements has a length of 9.</p>
+<p>I like to use python set to check for validity. Assuming all numbers are between 1 and 9, a sudoku is valid if and only if all lines, columns and blocks contains 9 different elements, ie if the set with all elements has a length of 9.</p>
 
-<p>To get something which return 0 if valid and a big number if there is many errors in the sudoku, you just need to substract the number of elements in the set from 9. If one number is missing, you get 1, if 2 you get 2, etc&#8230;</p>
+<p>To get something which return 0 if valid and a big number if there is many errors in the sudoku, you just need to subtract the number of elements in the set from 9. If one number is missing, you get 1, if 2 you get 2, etc&#8230;</p>
 
 <pre><code>def fittest(sudoku):
     result = 0
@@ -101,7 +101,7 @@
 
 <p>The full code is available <a href='https://gist.github.com/4426427'>here</a>.</p>
 
-<p>The fight started. Best score is dropping quickly and&#8230;. You wait for almost ever. You could have win but that&#8217;s definitely too slow. After around 2 hours, more than 100000 generations, the best try has a score of 38 (0 is the target). Still far.</p>
+<p>The fight started. Best score is dropping quickly and&#8230;. You wait for almost ever. You could have won but that&#8217;s definitely too slow. After around 2 hours, more than 100000 generations, the best try has a score of 38 (0 is the target). Still far.</p>
 
 <p>Sudoku 2 - Me 0</p>
 
@@ -133,14 +133,14 @@
 <ul>
 <li>How to generate a random value: let&#8217;s just shuffle a list of 1 to 9.</li>
 
-<li>How to mutate: let&#8217;s take two random indice between 0 and 8 and swap two elements.</li>
+<li>How to mutate: let&#8217;s take two random indexes between 0 and 8 and swap two elements.</li>
 
 <li>How to merge: let&#8217;s take one or the other gene, randomly.</li>
 </ul>
 
 <p><strong>ROUND 3</strong></p>
 
-<p>I got to the score 38 in 200 generations and 3 secondes. Much faster and stayed around 29 for ever (reached at 100 000+ generations).</p>
+<p>I got to the score 38 in 200 generations and 3 seconds. Much faster and stayed around 29 for ever (reached at 100 000+ generations).</p>
 
 <p>Sudoku 3 - Me 0</p>
 
@@ -148,7 +148,7 @@
 
 <p>29 at 2500 generations after few seconds. Much better.</p>
 
-<p>but my patience wouldn&#8217;t allow me to wait for days to get a valid result. After more than a night, the algorithm is now at 24. <a href='https://gist.github.com/4426452'>Full code here</a></p>
+<p>but my patience wouldn&#8217;t allow me to wait for days to get a valid result. After more than a night, the algorithm is now at 24. <a href='https://gist.github.com/4426452'>Full code here</a>.</p>
 
 <p>&#8230; Sudoku 4 - Me 0</p>
 					<div class="meta">
