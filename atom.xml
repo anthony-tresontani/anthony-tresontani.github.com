@@ -4,13 +4,113 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-01-01T11:53:40+01:00</updated>
+ <updated>2013-03-15T10:39:29+01:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
    <email>dev@tresontani.com</email>
  </author>
 
+ 
+ <entry>
+   <title>You are using south wrong</title>
+   <link href="http://anthony-tresontani.github.com/Django/2013/03/15/south-workflow"/>
+   <updated>2013-03-15T00:00:00+01:00</updated>
+   <id>http://anthony-tresontani.github.com/Django/2013/03/15/south-workflow</id>
+   <content type="html">&lt;p&gt;If you are a hackernews fellow like me and if you like Django and South, you should have read a post about one of my former colleague about &lt;a href='http://andrewingram.net/2012/dec/common-pitfalls-django-south/'&gt;south common pitfall&lt;/a&gt;. That&amp;#8217;s a great post about all the mistakes people usually do when using south on their project. If you now apply that and you project grows, you might still do one of the major issue I use to do when using this migration tool.&lt;/p&gt;
+
+&lt;p&gt;On our actual project, we reached 317 migrations and that&amp;#8217;s clearly too much for a project of that size. The impact is huge in the development process, you can&amp;#8217;t run anymore the test suite with migrations on without waiting for minutes.&lt;/p&gt;
+
+&lt;p&gt;Here is why that happen.&lt;/p&gt;
+
+&lt;h1 id='south_and_the_development_workflow'&gt;South and the development workflow&lt;/h1&gt;
+
+&lt;p&gt;Let&amp;#8217;s take an almost real example: A blog post.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;#8217;s imagine you start from scratch.&lt;/p&gt;
+
+&lt;p&gt;You start with the model:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Post(models.Model):
+    title = models.CharField(max_length=50)
+    description = models.TextField()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you are a rigourous developer, you create a migration for this:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python manage.py schemamigration post --init
+---&amp;gt; create 0001_initial.py
+
+python manage.py migrate post&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You write some views, some tests, some model methods, etc&amp;#8230;&lt;/p&gt;
+
+&lt;p&gt;Then you notice you&amp;#8217;d like to have an image associated with a blog post.&lt;/p&gt;
+
+&lt;p&gt;You add an ImageField:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    image = models.ImageField(upload_to=&amp;quot;images&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;and, still rigourous, you create a migration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python manage.py schemamigration post --auto
+---&amp;gt; create 0002_add_field_image.py
+
+python manage.py migrate post&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You spend 30 seconds remembering how boring it was to delete the table or to migrate it manually when you use to use syncdb only.&lt;/p&gt;
+
+&lt;p&gt;YOU DID IT WRONG!&lt;/p&gt;
+
+&lt;p&gt;You have 2 migrations where you should have only one. Your migration should transform your Production / Tests database from one state to another, not reflect all the development iterations you did. You should have merged these migrations. There is no reason to migrate a table which doesn&amp;#8217;t already exist in production.&lt;/p&gt;
+
+&lt;p&gt;If you are alone on your project or if you project is only few days long, that&amp;#8217;s ok. If you have 5 people working on it for months, that&amp;#8217;s not.&lt;/p&gt;
+
+&lt;h1 id='a_better_workflow'&gt;A better workflow&lt;/h1&gt;
+
+&lt;p&gt;You still start with the model, create views and tests, etc&amp;#8230;:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class Post(models.Model):
+    title = models.CharField(max_length=50)
+    description = models.TextField()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You still create the migration because, at that time, you don&amp;#8217;t know you would add something latter:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python manage.py schemamigration post --init
+---&amp;gt; create 0001_initial.py
+
+python manage.py migrate post&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You still notice image is missing and add it to the model You add an ImageField:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    image = models.ImageField(upload_to=&amp;quot;images&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;THEN, you remove the existing migration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;rm ./post/migrations/0001_initial.py&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You create a new initial migration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python manage.py schemamigration post --init
+---&amp;gt; create 0001_initial.py&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You drop the existing table:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python manage.py dbshell
+
+&amp;gt;&amp;gt;&amp;gt; drop table post_post;&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;You delete the migration history&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python manage.by shell_plus
+
+&amp;gt;&amp;gt;&amp;gt; MigrationHistory.objects.get(app_name=&amp;quot;post&amp;quot;).delete()&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Then you run the migration:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;python manage.py migrate post&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This way, you don&amp;#8217;t get 300+ migrations when less than 100 would have been sufficient. You &amp;#8220;rebase&amp;#8221; your migrations ;)&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Generating valid sudokus with a genetic algorithm</title>
