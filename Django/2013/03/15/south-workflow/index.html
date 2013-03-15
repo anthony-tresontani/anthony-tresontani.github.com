@@ -49,11 +49,11 @@
 
 			<div class="bd">
 				<div class="entry-content">
-					<p>If you are a hackernews fellow like me and if you like Django and South, you should have read a post about one of my former colleague about <a href='http://andrewingram.net/2012/dec/common-pitfalls-django-south/'>south common pitfall</a>. That&#8217;s a great post about all the mistakes people usually do when using south on their project. If you now apply that and you project grows, you might still do one of the major issue I use to do when using this migration tool.</p>
+					<p>If you are a hackernews fellow like me and if you like Django and South, you should have read a post about one of my former colleague about <a href='http://andrewingram.net/2012/dec/common-pitfalls-django-south/'>south common pitfall</a>. That&#8217;s a great post about all the mistakes people usually do when using south on their project. If you now apply that and your project grows, you might still do one of the major issue I use to do when using this migration tool.</p>
 
 <p>On our actual project, we reached 317 migrations and that&#8217;s clearly too much for a project of that size. The impact is huge in the development process, you can&#8217;t run anymore the test suite with migrations on without waiting for minutes.</p>
 
-<p>Here is why that happen.</p>
+<p>Here is why that happens.</p>
 
 <h1 id='south_and_the_development_workflow'>South and the development workflow</h1>
 
@@ -67,7 +67,7 @@
     title = models.CharField(max_length=50)
     description = models.TextField()</code></pre>
 
-<p>As you are a rigourous developer, you create a migration for this:</p>
+<p>As you are a rigorous developer, you create a migration for this:</p>
 
 <pre><code>python manage.py schemamigration post --init
 ---&gt; create 0001_initial.py
@@ -82,7 +82,7 @@ python manage.py migrate post</code></pre>
 
 <pre><code>    image = models.ImageField(upload_to=&quot;images&quot;)</code></pre>
 
-<p>and, still rigourous, you create a migration:</p>
+<p>and, still rigorous, you create a migration:</p>
 
 <pre><code>python manage.py schemamigration post --auto
 ---&gt; create 0002_add_field_image.py
@@ -95,17 +95,17 @@ python manage.py migrate post</code></pre>
 
 <p>You have 2 migrations where you should have only one. Your migration should transform your Production / Tests database from one state to another, not reflect all the development iterations you did. You should have merged these migrations. There is no reason to migrate a table which doesn&#8217;t already exist in production.</p>
 
-<p>If you are alone on your project or if you project is only few days long, that&#8217;s ok. If you have 5 people working on it for months, that&#8217;s not.</p>
+<p>If you are alone on your project or if you project is only a few days long, that&#8217;s ok. If you have 5 people working on it for months, that&#8217;s not.</p>
 
 <h1 id='a_better_workflow'>A better workflow</h1>
 
-<p>You still start with the model, create views and tests, etc&#8230;:</p>
+<p>You still start with the model, create views and tests:</p>
 
 <pre><code>class Post(models.Model):
     title = models.CharField(max_length=50)
     description = models.TextField()</code></pre>
 
-<p>You still create the migration because, at that time, you don&#8217;t know you would add something latter:</p>
+<p>You still create the migration because, at that time, you don&#8217;t know you would add something later:</p>
 
 <pre><code>python manage.py schemamigration post --init
 ---&gt; create 0001_initial.py
@@ -199,7 +199,7 @@ python manage.py migrate post</code></pre>
 
   <div id="disqus_thread"></div>
 <script type="text/javascript">
-    var disqus_developer = 1;
+    
     var disqus_shortname = 'anthonytresontani'; // required: replace example with your forum shortname
     
     /* * * DON'T EDIT BELOW THIS LINE * * */
@@ -282,6 +282,22 @@ python manage.py migrate post</code></pre>
 </script>
 
   
+
+
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34729308-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+</script>
+
+
+
 </body>
 </html>
 
