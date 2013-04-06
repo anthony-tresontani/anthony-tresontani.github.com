@@ -9,6 +9,7 @@ http://anthony-tresontani.github.com/sitemap.txt
 http://anthony-tresontani.github.com/index.html
 
 http://anthony-tresontani.github.com/Startup/2013/04/06/wish-me-good-luck
+http://anthony-tresontani.github.com/Startup/2013/04/06/step-0-why-now
 http://anthony-tresontani.github.com/Django/2013/03/15/south-workflow
 http://anthony-tresontani.github.com/Python/2012/12/31/sudoku-generator-with-genetic
 http://anthony-tresontani.github.com/Thoughts/2012/11/08/dear_pm_thats_not_so_simple
