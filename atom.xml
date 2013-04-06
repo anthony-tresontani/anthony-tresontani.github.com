@@ -4,13 +4,31 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-03-15T11:22:40+01:00</updated>
+ <updated>2013-04-06T10:09:57+02:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
    <email>dev@tresontani.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Wish me good luck</title>
+   <link href="http://anthony-tresontani.github.com/Startup/2013/04/06/wush-me-good-luck"/>
+   <updated>2013-04-06T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Startup/2013/04/06/wush-me-good-luck</id>
+   <content type="html">&lt;p&gt;5 weeks.&lt;/p&gt;
+
+&lt;p&gt;I have been writing technical post on this blog since almost a year now dedicated to find the best solution with my predilection tools: python / django.&lt;/p&gt;
+
+&lt;p&gt;I have been a lucky employee, allowed to travel around Europe while remotely working on complex websites.&lt;/p&gt;
+
+&lt;p&gt;Still 5 weeks. Last destination: Stockholm, last time being an employee.&lt;/p&gt;
+
+&lt;p&gt;Now, all I need is a tiny bit of talent, some skills, good stress resistance and a massive amount of luck.&lt;/p&gt;
+
+&lt;p&gt;Wish me good luck, I am creating my startup&amp;#8230;&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>You are using south wrong</title>
