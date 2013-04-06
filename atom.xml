@@ -4,7 +4,7 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-04-06T10:16:37+02:00</updated>
+ <updated>2013-04-06T10:21:16+02:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>Wish me good luck</title>
-   <link href="http://anthony-tresontani.github.com/Startup/2013/04/06/wush-me-good-luck"/>
+   <link href="http://anthony-tresontani.github.com/Startup/2013/04/06/wish-me-good-luck"/>
    <updated>2013-04-06T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Startup/2013/04/06/wush-me-good-luck</id>
+   <id>http://anthony-tresontani.github.com/Startup/2013/04/06/wish-me-good-luck</id>
    <content type="html">&lt;p&gt;5 weeks.&lt;/p&gt;
 
 &lt;p&gt;I have been writing technical post on this blog since almost a year now dedicated to find the best solution with my predilection tools: python / django.&lt;/p&gt;
