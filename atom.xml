@@ -4,13 +4,107 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-04-06T11:35:35+02:00</updated>
+ <updated>2013-04-14T10:23:29+02:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
    <email>dev@tresontani.com</email>
  </author>
 
+ 
+ <entry>
+   <title>Now what?</title>
+   <link href="http://anthony-tresontani.github.com/Startup/2013/04/14/now-what"/>
+   <updated>2013-04-14T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Startup/2013/04/14/now-what</id>
+   <content type="html">&lt;p&gt;I had already many personnal projects but that&amp;#8217;s the first time I am really ready to take what it need to make it successful. I now think of myself as a startup creator. I tell my relative I am gonna create one. Being sure that&amp;#8217;s what you really want was the step zero for me. I have to be 100% sure I will want to put my energy and my savings on the project. but now what?&lt;/p&gt;
+
+&lt;p&gt;I have an infinite list of choices in front of me:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;code, code and code. I am web dev and that&amp;#8217;s what I like to do.&lt;/li&gt;
+
+&lt;li&gt;officially create the company. Do some paperwork&lt;/li&gt;
+
+&lt;li&gt;look for fund raising&lt;/li&gt;
+
+&lt;li&gt;define a MVP (Minimum Viable product)&lt;/li&gt;
+
+&lt;li&gt;create a killer team&lt;/li&gt;
+
+&lt;li&gt;lost myself in books about &amp;#8220;how to great an awesome company&amp;#8221;&lt;/li&gt;
+
+&lt;li&gt;learn how to use wireframe tools&lt;/li&gt;
+
+&lt;li&gt;refine the MVP&lt;/li&gt;
+
+&lt;li&gt;look for job opportunities. Even confident of your choice, you would doubt.&lt;/li&gt;
+
+&lt;li&gt;write a business plan&lt;/li&gt;
+
+&lt;li&gt;define a strategy&lt;/li&gt;
+
+&lt;li&gt;try to build an early audience&lt;/li&gt;
+
+&lt;li&gt;etc&amp;#8230;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I am quite convinced there is no obvious answer for all contexts. Depending on the situation you are in, you might start by one step or another. I am also quite convinced there is no single answer. There is many things you want/have to do.&lt;/p&gt;
+
+&lt;h2 id='my_context'&gt;My context&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;I don&amp;#8217;t need to rush to get money as I would claim french jobseeker allowance for few months.&lt;/li&gt;
+
+&lt;li&gt;I am starting the project from scratch, I have no code.&lt;/li&gt;
+
+&lt;li&gt;I&amp;#8217;ve got the idea on my own, which mean I need to convince people to join me if I want to build a team.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id='what_i_did_what_i_am_doing'&gt;What I did, what I am doing&lt;/h2&gt;
+
+&lt;p&gt;Unfortunately, I am doing almost everything but I still try to get as much focus as possible to get things done.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Team&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I am a backend developer with no front-end skills. I know for fact the best way for me to fail would be to lose hours on HTML/CSS things. A good friend of mine is a full stack web dev and also an entrepreneur. His company is not in a really good shape at the moment, and he is considering new opportunities. My first step has been to try to convince him to join me. Still ongoing.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;MVP&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I am really convinced having a really early MVP is critical. I like coding but I don&amp;#8217;t want to spend days coding something useless. I have been spending some time thinking what would really be important to ship to validate the existence of any market for my product. I try to reduce my MVP to the minimum. I noticed my idea wasn&amp;#8217;t really obvious to understand for people not already in the web to print market. That&amp;#8217;s why I shifted my target from rushing to get an MVP to rushing to get a prototype. In my situation, there is many advantages to have a prototype first. Even if the MVP should be minumum, there is lot&amp;#8217;s of non core features you need to think of:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;billing&lt;/li&gt;
+
+&lt;li&gt;security&lt;/li&gt;
+
+&lt;li&gt;nice design&lt;/li&gt;
+
+&lt;li&gt;documentation&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I know I am gonna need to do these things but they require extra time, extra skills, extra people. I planned to ask one of my designer friend to join for the website design and some marketing stuffs, but the more people you have in your team ,the more communication you have to handle, the less things you do. Building a team take time and I think it&amp;#8217;s better if I can postpone that investment to a near future. Before we raise any money, I want to add people one by one.&lt;/p&gt;
+
+&lt;p&gt;I tried to use various wireframing tools but most of it was time loss. Pen and papers are more effective investment if you don&amp;#8217;t know like my how to use them.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Code&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Obviously, until I would have a prototype, I spend most of my time coding it. I need something to show.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Funds&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I might be over-optimistic but I&amp;#8217;d like to not consider fund raising like an unavoidable step. I have no former experience on that but I feel like I wouldn&amp;#8217;t get people able to advice us here in France, only money and extra constraints. I won&amp;#8217;t start doing that until I&amp;#8217;ve got the prototype done and I would be sure I have to.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Building an early audience&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I am creating an API. My initial target is people like us, developers. Having an early audience is something which should help to have people listening to what we would say when the product would be ready. As I have been interessed in the past to here about people creating their company, I decided it&amp;#8217;s my turn to contribute and hope my own story would interest few people. I try to blog at least once a week for the moment. Creating a startup is such an existing experience than there is no real difficulty to find a subject. Telling this story also help to step a bit back to have clear idea about how / why I am doing that at the moment.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Other things&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;This project being quite new for me, I am trying to talk a lot&amp;#8217;s about it. That helps to make my ideas clear. Sometime, I also have a quick look at some job offers to remind me I really don&amp;#8217;t want to be an employee at the moment. When I need to get some confidence about if I am doing the right thing right now, I hide myself in a business book until I forgot what I was looking for.&lt;/p&gt;
+
+&lt;p&gt;If you read until that point and want to hear more about my startup adventure, you should definitely consider following me on twitter.&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Wish me good luck</title>
