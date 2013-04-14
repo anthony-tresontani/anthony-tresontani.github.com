@@ -8,6 +8,7 @@ http://anthony-tresontani.github.com/pages.html
 http://anthony-tresontani.github.com/sitemap.txt
 http://anthony-tresontani.github.com/index.html
 
+http://anthony-tresontani.github.com/Startup/2013/04/15/what-is-that-mvp
 http://anthony-tresontani.github.com/Startup/2013/04/14/now-what
 http://anthony-tresontani.github.com/Startup/2013/04/06/wish-me-good-luck
 http://anthony-tresontani.github.com/Startup/2013/04/06/step-0-why-now

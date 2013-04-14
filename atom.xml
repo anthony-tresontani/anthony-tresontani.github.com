@@ -4,13 +4,39 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-04-14T10:23:29+02:00</updated>
+ <updated>2013-04-14T20:27:39+02:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
    <email>dev@tresontani.com</email>
  </author>
 
+ 
+ <entry>
+   <title>What the heck is my MVP?</title>
+   <link href="http://anthony-tresontani.github.com/Startup/2013/04/15/what-is-that-mvp"/>
+   <updated>2013-04-15T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Startup/2013/04/15/what-is-that-mvp</id>
+   <content type="html">&lt;p&gt;Most people in the Hacker News community would know what a MVP (&lt;a href='http://en.wikipedia.org/wiki/Minimum_viable_product'&gt;Minimum Viable Product&lt;/a&gt;) is. The definition is quite straightforward. However, there always some discussions about how minimum your MVP should be.&lt;/p&gt;
+
+&lt;p&gt;The idea behind the MVP is to invest the minimum amount of time/money to hit the ground quickly and to see if you primary assumption about an existing business opportunity is real. Then, you use this feedback to realign your product.&lt;/p&gt;
+
+&lt;p&gt;Ok, nothing new here.&lt;/p&gt;
+
+&lt;p&gt;Now, let say you follow stricly this philosophy and you build a crappy product without the help of any designer ( or not having, like me, any talent for graphical related things). That&amp;#8217;s quite agreed that you would failed to get any feedback because people won&amp;#8217;t click on your flashy read sign in button.&lt;/p&gt;
+
+&lt;p&gt;Ok, therefore, a MVP is a minimal product with some nice designs.&lt;/p&gt;
+
+&lt;p&gt;If you follow this logic multiple times, for security, for invoicing, for documentation and so on, you might reach the same conclusion than me. &lt;em&gt;A MVP is minimal for core features only&lt;/em&gt;, anything else should be optimal. You should minimize your core domain to the smallest area possible. That also mean the coolest part of your project would be minimal, damn it.&lt;/p&gt;
+
+&lt;p&gt;I am really engaged in having a product shipped quickly and I work really hard on myself to not ship something not critical for the understanding of the product. Anytime I plan to build something, I try to find a viable shortcut to reduce the amount of work. Iteratively, the scope of my MVP reduce. Your aim is not to create a great product, your aim should be to validate an hypothesis, ie &amp;#8220;Is my idea really awesome?&amp;#8221;.&lt;/p&gt;
+
+&lt;p&gt;One of my friend is a web entrepreneur but closer to the way how non-startup business work. Convincing him to follow this lean process is not always obvious. The product we are building requires the user to upload three user-defined files: one in JSON, one in CSS and one in a higher level language. As a python fellow, all my architecture is python oriented. My initial idea was to use Javascript as this higher level language. JS is now used by frontend and backend developers. The code to be written is really simple. JS is definitely a good fit. A good fit but not for the MVP. My friend is still really astonished by that change but I stay on track. Validate an hypothesis, not build a great product. MVP should stay simple and straight forward. Python is the best fit for the MVP (much more easy to integrate in a python architecture). By reducing my target audience (ie there is less python dev than dev knowing JS), I would ship faster and I would still get enough valid feedbacks.&lt;/p&gt;
+
+&lt;p&gt;Would I still have a product at the end? not sure. Would my single feature API be so awesome than everybody would cry for having it? I hope so. A 30 seconds sample of my first album &amp;#8220;web2print API&amp;#8221;, that&amp;#8217;s what my MVP gonna be.&lt;/p&gt;
+
+&lt;p&gt;Still reading, I bet you should follow me on twitter.&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>Now what?</title>
