@@ -4,7 +4,7 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-04-27T10:40:44+02:00</updated>
+ <updated>2013-04-27T10:41:50+02:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
@@ -14,9 +14,9 @@
  
  <entry>
    <title>We failed our first iteration</title>
-   <link href="http://anthony-tresontani.github.com/Startups/2013/04/27/first-iteration-failed"/>
+   <link href="http://anthony-tresontani.github.com/Startup/2013/04/27/first-iteration-failed"/>
    <updated>2013-04-27T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Startups/2013/04/27/first-iteration-failed</id>
+   <id>http://anthony-tresontani.github.com/Startup/2013/04/27/first-iteration-failed</id>
    <content type="html">&lt;p&gt;We spent a lot&amp;#8217;s of time this week trying to validate our first business plan hypothesis.&lt;/p&gt;
 
 &lt;p&gt;For the ones who don&amp;#8217;t know STAMPLIN, and I know after this first iteration that&amp;#8217;s everybody, our goal is to provide an API to allow any PDF to be used as a template for many different customers. As an example, I always use a business card. A designer provide a PDF template, your customer submit their data (name, address, phone and title) and they would get a PDF customized with their info (PDF ready to print). Think Vistaprint.com, we are trying to give large public access to that technology.&lt;/p&gt;
