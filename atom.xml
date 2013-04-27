@@ -4,13 +4,81 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-04-14T20:27:39+02:00</updated>
+ <updated>2013-04-27T10:40:44+02:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
    <email>dev@tresontani.com</email>
  </author>
 
+ 
+ <entry>
+   <title>We failed our first iteration</title>
+   <link href="http://anthony-tresontani.github.com/Startups/2013/04/27/first-iteration-failed"/>
+   <updated>2013-04-27T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Startups/2013/04/27/first-iteration-failed</id>
+   <content type="html">&lt;p&gt;We spent a lot&amp;#8217;s of time this week trying to validate our first business plan hypothesis.&lt;/p&gt;
+
+&lt;p&gt;For the ones who don&amp;#8217;t know STAMPLIN, and I know after this first iteration that&amp;#8217;s everybody, our goal is to provide an API to allow any PDF to be used as a template for many different customers. As an example, I always use a business card. A designer provide a PDF template, your customer submit their data (name, address, phone and title) and they would get a PDF customized with their info (PDF ready to print). Think Vistaprint.com, we are trying to give large public access to that technology.&lt;/p&gt;
+
+&lt;h1 id='hackernews_eldorado'&gt;Hackernews eldorado&lt;/h1&gt;
+
+&lt;p&gt;Iteration 1 was about to sell that to the developer community. What&amp;#8217;s the best place to reach developers, &lt;a href='https://news.ycombinator.com/news'&gt;HackerNews&lt;/a&gt;. We wanted to experiment how much attention/traction we would get on that community. Without providing any middle-term commitment, we wanted to know if we would have a chance of succeeding here. MVP is a great tool. By providing a minimal subset of features, you cut down on the time, but a MVP still takes a long time to be build. Instead of 2 years, it would takes 6-9 months. That&amp;#8217;s still a lot of time to notice you failed. We needed a faster feedback.&lt;/p&gt;
+
+&lt;p&gt;As many successful entrepreneur did, we tried to establish a discussion with our likely customers. We asked many questions:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href='https://news.ycombinator.com/item?id=5557964'&gt;what does web2print mean for you?&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='https://news.ycombinator.com/item?id=5562648'&gt;How are you using the PDF format in your websites?&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='https://news.ycombinator.com/item?id=5597457'&gt;Who would pay for easy PDF generation?&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='https://news.ycombinator.com/item?id=5599689'&gt;Whould you be interested in an PDF customization API?&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='https://news.ycombinator.com/item?id=5600601'&gt;Would you pay for a variable data printing API?&lt;/a&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;a href='https://news.ycombinator.com/item?id=5601127'&gt;what do you think about this startup idea?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We got 9 points in total and 21 comments. Nothing really mind blowing, no real break through which would help us to say: &amp;#8220;We got it right&amp;#8221;. As most people, we suspected the timing to be wrong. Did we post at the right time? We haven&amp;#8217;t been unlucky because we stayed only 30 minutes on the new page. Then we fought our title was wrong, our way to catch people attention is wrong.&lt;/p&gt;
+
+&lt;p&gt;As a final try, we used something we noticed while reading HN, post about failures get much more advices than the one about creating a startup. We, as business experimenters, tried that:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href='https://news.ycombinator.com/item?id=5603370'&gt;Does a startup has to fail to get HNers feedback?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;As we suspected, we got 9 points for this post, ie 6 times more than what we got with &amp;#8220;asking advices&amp;#8221; questions. But still no valuable comments.&lt;/p&gt;
+
+&lt;p&gt;We thought our way wasn&amp;#8217;t engaging enough, not enough entertaining. We need a way to have something different but still without spending any time on coding. I know if I&amp;#8217;d jump back on coding, It&amp;#8217;s gonna be really hard for me to stop until I got something proper.&lt;/p&gt;
+
+&lt;p&gt;What about doing some slides?&lt;/p&gt;
+
+&lt;p&gt;Slide are boring and it&amp;#8217;s quite tricky to do an engaging presentation. There is things like &lt;a href='http://bartaz.github.io/impress.js/#/bored'&gt;impress.js&lt;/a&gt; now, but it still too much text oriented. I wanted something more dynamic. As I know the common adage is to not spend time on something you don&amp;#8217;t have skill on, I tried to look for some whiteboard animation artists. As I am not comfortable to pay $10000 for an establish company, I looked for freelancers. 3 emails later and a suspicion of &amp;#8220;you would never get an answer before the end of the project&amp;#8221;, I told myself I have to give it a try.&lt;/p&gt;
+
+&lt;h1 id='me_a_cartoon_artist_seriously'&gt;Me, a cartoon artist, seriously?&lt;/h1&gt;
+
+&lt;p&gt;It took me quite a long time to choose the right tool for the unskill artist I am. I tried with some easy whiteboarding applications but you never get what you need and you lose a lot&amp;#8217;s a time trying to figure out how to get over all these limitations. Then I decided to follow an even more complicated path, do it from scratch. I downloaded a 2D animation software, video editing one and starts creating my first video. As a child discovering a drawing program, I was really happy of the first noobish result but still aware there is nothing professional in it. Would a childish animation movie would catch attention? Like Mythbusters, I had to figure out.&lt;/p&gt;
+
+&lt;p&gt;I knew that would take me ages to do a video long enough to properly explain our concept and I wouldn&amp;#8217;t spend 3 weeks on that experiment. We decided to create a lean video, only a kind of teaser. 4 days later, the video was as ready as possible.&lt;/p&gt;
+
+&lt;p&gt;Here is the master piece: &lt;a href='http://www.youtube.com/watch?v=touYjqcG2jA'&gt;Stamplin intro&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;I posted it on HN at a bad timing on purpose to get some early feedbacks. I made obvious mistakes like subtitles not enabled by default, not clear enough drawing, some bits being too short. We went until publishing the video as a last burst of proudness about a crazy experiment but we already had some suspicions about the failure. The video got so little view it&amp;#8217;s even hard to conclude the quality of it is for something. At most, we didn&amp;#8217;t manage to convince 20 visitors to upvote it., one of them let us gently know that he really didn&amp;#8217;t get what&amp;#8217;s that SH** is. We might publish this video again later with a more provoking title.&lt;/p&gt;
+
+&lt;h1 id='hn_is_not_for_us'&gt;HN is not for us&lt;/h1&gt;
+
+&lt;p&gt;Why do we think HN is not the right place for us? We had to ask ourselves what would be people likely to use our final product. That&amp;#8217;s gonna be some developers ( we build an API, right?) , having some PDFs usages and understanding how to make benefits of something which is not really an established needs. Basically, we asked too much effort (to imagine how to use with our product) to 90% of people not having interest in print designs or PDFs. The other failure was the quality requested to make HN points. When hearing about a startup, HNers expect to get as much quality as a company with some baking. We could have spend $10000 in a video but we didn&amp;#8217;t want to as a first iteration.&lt;/p&gt;
+
+&lt;p&gt;Did our assumption, really failed, ie &lt;em&gt;our product should target developer&lt;/em&gt;? Yes and no, we really thing that&amp;#8217;s gonna be the case one day, but that won&amp;#8217;t be the first step of our journey. We need people who understand our value more easily.&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Iteration 1: FAILED&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;We learned a lot and we really enjoyed this first iteration, but time is again us now, talk you later, I have a new business model to validate&amp;#8230;&lt;/p&gt;
+
+&lt;p&gt;Want to know more about STAMPLIN, follow it @stamplinAPI.&lt;/p&gt;</content>
+ </entry>
  
  <entry>
    <title>What the heck is my MVP?</title>
