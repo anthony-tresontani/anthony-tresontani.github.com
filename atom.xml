@@ -4,13 +4,41 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-04-27T10:41:50+02:00</updated>
+ <updated>2013-05-04T08:49:47+02:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
    <email>dev@tresontani.com</email>
  </author>
 
+ 
+ <entry>
+   <title>How not to sell your startup idea</title>
+   <link href="http://anthony-tresontani.github.com/Startup/2013/05/04/hownotsell"/>
+   <updated>2013-05-04T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/Startup/2013/05/04/hownotsell</id>
+   <content type="html">&lt;p&gt;Yet another hard week of trying to get some feedbacks, traction on our startup idea. I read many entrepreneur posts about how they managed to get customers to pay for a startup idea. So called early adaptors who decided to go as far as trusting a company without having even a single product. How lean is that! To sell your product before a single line of code. Sounds awesome, sounded the way to go.&lt;/p&gt;
+
+&lt;p&gt;It seems this strategy has some limitations depending on the target and your selling skills. It seems our audience, developers or designers, mainly contacted through forums, blog posts or email, are not really willing to be bother listening about how we would do something great but we have nothing to show for the moment.&lt;/p&gt;
+
+&lt;p&gt;For us, the result was quite straight forward, nothing to show = nobody to listen.&lt;/p&gt;
+
+&lt;p&gt;To get people joining a vision, emotions are critical but not all products could convince using emotions. Would you be emotionally engaged by peeler? I don&amp;#8217;t think so. Our product doesn&amp;#8217;t really engage emotionally. Is there any API doing so?&lt;/p&gt;
+
+&lt;p&gt;As we didn&amp;#8217;t manage to get earlyadopters nor feedback, we decided to see if the community would have more interest in a quick-and-dirty website about getting earlyadopters. That would have solved our problem and maybe would have triggered some interest. Few hours of development later, we got &lt;a href='http://early.herokuapp.com/'&gt;early&lt;/a&gt;. Not much more interest from HN community. Having nothing is not the only way to get no feedback, having nothing valuable works too.&lt;/p&gt;
+
+&lt;p&gt;We also tried to discuss with some designers. Where to find them? on a designer forum. I posted some indirect questions on the forum and when I felt like our startup product would really answer somebody question, I posted about Stamplin.I got banned for being a spammer. That&amp;#8217;s kind of a hard lesson. You are a spammer to the world unless people like your product so much they just want it and would accept any communication for it.&lt;/p&gt;
+
+&lt;p&gt;I think we got the lesson that time. You have to propose something to be heard, something valuable. Our target, you, get really good at smelling fakes and unvaluable solution. We focused so much on the M(&amp;#8220;minimum&amp;#8221;) of MVP than we forgot the V(&amp;#8220;valuable&amp;#8221;) part of it.&lt;/p&gt;
+
+&lt;p&gt;Week 3 lessons:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Do not forget to keep your MVP valuable
+
+Earlyadopter detects real value
+
+As an entrepreneur trying to get some traction, your are a spammer to the world eyes&lt;/code&gt;&lt;/pre&gt;</content>
+ </entry>
  
  <entry>
    <title>We failed our first iteration</title>
