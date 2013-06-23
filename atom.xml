@@ -4,7 +4,7 @@
  <title>Anthony Tresontani blog</title>
  <link href="http://anthony-tresontani.github.com/atom.xml" rel="self"/>
  <link href="http://anthony-tresontani.github.com"/>
- <updated>2013-05-04T08:54:13+02:00</updated>
+ <updated>2013-06-23T10:44:55+02:00</updated>
  <id>http://anthony-tresontani.github.com</id>
  <author>
    <name>Anthony Tresontani</name>
@@ -13,10 +13,72 @@
 
  
  <entry>
+   <title>Book driven startup</title>
+   <link href="http://anthony-tresontani.github.com/startup/2013/06/23/book-drive-startups"/>
+   <updated>2013-06-23T00:00:00+02:00</updated>
+   <id>http://anthony-tresontani.github.com/startup/2013/06/23/book-drive-startups</id>
+   <content type="html">&lt;p&gt;6 weeks, 6 challenges, 6 books.&lt;/p&gt;
+
+&lt;p&gt;I identified a pattern quite effective in the way I tackled the first 6 weeks of my startup project. That might help you as it helped me.&lt;/p&gt;
+
+&lt;h1 id='book_driven_startup'&gt;Book driven startup&lt;/h1&gt;
+
+&lt;p&gt;I&amp;#8217;ve been working on my startup project full time for 6 weeks now and each week was full of new challenges, most of them far outside the skillset I developed in my previous jobs. I am a tech guy with a bit of entrepreneur knowledge but no hands-on experience on creating a business. I had to:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Create a &lt;em&gt;startup strategy&lt;/em&gt; (ie try to know where we would go in the next N weeks and how)&lt;/li&gt;
+
+&lt;li&gt;Do some &lt;em&gt;customer discovery&lt;/em&gt;&lt;/li&gt;
+
+&lt;li&gt;Understand our &lt;em&gt;business domain&lt;/em&gt;&lt;/li&gt;
+
+&lt;li&gt;Learn some &lt;em&gt;product management&lt;/em&gt;&lt;/li&gt;
+
+&lt;li&gt;Create a &lt;em&gt;prototype&lt;/em&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;em&gt;Networking&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Like a writer or a movie director could have a specific song to boost his creativity, I used books to help me avoid really obvious mistakes and get a better understanding of any of these areas. I found myself repetiting the same pattern week after week and I managed to get some good things done thanks to the newly called Book Driven Startup process.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Work on something I am not an expert in. This method focus on not being rubish on something, not on becoming an expert.&lt;/li&gt;
+
+&lt;li&gt;Lose time, think hard on your project and lose time again. I noticed I use to spend around a full week (monday to friday) unless when I had completely no idea what I have have to do. In that case I would go to the next step quickly.&lt;/li&gt;
+
+&lt;li&gt;Look at what I did during this week, what struggled me, what I should do better.&lt;/li&gt;
+
+&lt;li&gt;Find a good book for my kindle about the struggling domain, read until I find the solution (over the weekend).&lt;/li&gt;
+
+&lt;li&gt;Fix my plan / action / way of working next week.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;There is obviously nothing too fancy in this way of working but it had quite positive effects for me over theses 6 weeks. The only thing worth mentioning (for me) is the week of failure is quite important in the process. You have to understand what you are looking for and you need to spend some time thinking about it by yourself before somebody give you the holy grail.&lt;/p&gt;
+
+&lt;h1 id='books_i_read'&gt;Books I read&lt;/h1&gt;
+
+&lt;p&gt;for Startup strategy &lt;br /&gt;Steve Blank&amp;#8217;s book &lt;code&gt;The startup Owner&amp;#39;s Manual&lt;/code&gt;. Gave me a better understanding of lean startup.&lt;/p&gt;
+
+&lt;p&gt;for Customer discovery &lt;br /&gt;Steve Blank book is great but lacks practical examples about the first step, finding what your customer wants. I finally found some worthy HOWTOs on &lt;code&gt;The Entrepreneur&amp;#39;s Guide to Customer&lt;/code&gt;, Brant Cooper and Patrick Vlaskovits.&lt;/p&gt;
+
+&lt;p&gt;for Business domain &lt;br /&gt;We are working around the PDF format and we need to learn more about it. &lt;code&gt;PDF explained&lt;/code&gt; by John whitington gave us a really good overview of it.&lt;/p&gt;
+
+&lt;p&gt;for Product management &lt;br /&gt;The only deceiving read. Not much learn from this book. Not worth mentioning.&lt;/p&gt;
+
+&lt;p&gt;for Protype &lt;br /&gt;Even if I am tech guy, there is few things I had to learn technically. Few pages of &lt;code&gt;Compilers: Principles, Techniques, and Tools&lt;/code&gt; gave me great insight of how to implement that better. Written by Alfred V. Aho, Monica S. Lam, Ravi Sethi, and Jeffrey D. Ullman.&lt;/p&gt;
+
+&lt;p&gt;for Networking &lt;br /&gt;I had no clue how to do that before I read &lt;code&gt;Networking for the Introverts&lt;/code&gt; by Rob Brown.&lt;/p&gt;
+
+&lt;p&gt;As my 7th week is almost over, I am reading &lt;code&gt;Restul Web Services Cookbook&lt;/code&gt; to be sure I would have the basic REST recipes before jumping on writing thousands line of codes.&lt;/p&gt;
+
+&lt;p&gt;Books helped/helps me, you might ask them for help too.&lt;/p&gt;</content>
+ </entry>
+ 
+ <entry>
    <title>Week 3 - How not to sell your startup idea</title>
-   <link href="http://anthony-tresontani.github.com/Startup/2013/05/04/hownotsell"/>
+   <link href="http://anthony-tresontani.github.com/startup/2013/05/04/hownotsell"/>
    <updated>2013-05-04T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Startup/2013/05/04/hownotsell</id>
+   <id>http://anthony-tresontani.github.com/startup/2013/05/04/hownotsell</id>
    <content type="html">&lt;p&gt;Yet another hard week of trying to get some feedbacks, traction on our startup idea. I read many entrepreneur posts about how they managed to get customers to pay for a startup idea. So called early adaptors who decided to go as far as trusting a company without having even a single product. How lean is that! To sell your product before a single line of code. Sounds awesome, sounded the way to go.&lt;/p&gt;
 
 &lt;p&gt;It seems this strategy has some limitations depending on the target and your selling skills. It seems our audience, developers or designers, mainly contacted through forums, blog posts or email, are not really willing to be bother listening about how we would do something great but we have nothing to show for the moment.&lt;/p&gt;
@@ -42,9 +104,9 @@ As an entrepreneur trying to get some traction, your are a spammer to the world 
  
  <entry>
    <title>We failed our first iteration</title>
-   <link href="http://anthony-tresontani.github.com/Startup/2013/04/27/first-iteration-failed"/>
+   <link href="http://anthony-tresontani.github.com/startup/2013/04/27/first-iteration-failed"/>
    <updated>2013-04-27T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Startup/2013/04/27/first-iteration-failed</id>
+   <id>http://anthony-tresontani.github.com/startup/2013/04/27/first-iteration-failed</id>
    <content type="html">&lt;p&gt;We spent a lot&amp;#8217;s of time this week trying to validate our first business plan hypothesis.&lt;/p&gt;
 
 &lt;p&gt;For the ones who don&amp;#8217;t know STAMPLIN, and I know after this first iteration that&amp;#8217;s everybody, our goal is to provide an API to allow any PDF to be used as a template for many different customers. As an example, I always use a business card. A designer provide a PDF template, your customer submit their data (name, address, phone and title) and they would get a PDF customized with their info (PDF ready to print). Think Vistaprint.com, we are trying to give large public access to that technology.&lt;/p&gt;
@@ -110,9 +172,9 @@ As an entrepreneur trying to get some traction, your are a spammer to the world 
  
  <entry>
    <title>What the heck is my MVP?</title>
-   <link href="http://anthony-tresontani.github.com/Startup/2013/04/15/what-is-that-mvp"/>
+   <link href="http://anthony-tresontani.github.com/startup/2013/04/15/what-is-that-mvp"/>
    <updated>2013-04-15T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Startup/2013/04/15/what-is-that-mvp</id>
+   <id>http://anthony-tresontani.github.com/startup/2013/04/15/what-is-that-mvp</id>
    <content type="html">&lt;p&gt;Most people in the Hacker News community would know what a MVP (&lt;a href='http://en.wikipedia.org/wiki/Minimum_viable_product'&gt;Minimum Viable Product&lt;/a&gt;) is. The definition is quite straightforward. However, there always some discussions about how minimum your MVP should be.&lt;/p&gt;
 
 &lt;p&gt;The idea behind the MVP is to invest the minimum amount of time/money to hit the ground quickly and to see if you primary assumption about an existing business opportunity is real. Then, you use this feedback to realign your product.&lt;/p&gt;
@@ -136,9 +198,9 @@ As an entrepreneur trying to get some traction, your are a spammer to the world 
  
  <entry>
    <title>Now what?</title>
-   <link href="http://anthony-tresontani.github.com/Startup/2013/04/14/now-what"/>
+   <link href="http://anthony-tresontani.github.com/startup/2013/04/14/now-what"/>
    <updated>2013-04-14T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Startup/2013/04/14/now-what</id>
+   <id>http://anthony-tresontani.github.com/startup/2013/04/14/now-what</id>
    <content type="html">&lt;p&gt;I had already many personnal projects but that&amp;#8217;s the first time I am really ready to take what it need to make it successful. I now think of myself as a startup creator. I tell my relative I am gonna create one. Being sure that&amp;#8217;s what you really want was the step zero for me. I have to be 100% sure I will want to put my energy and my savings on the project. but now what?&lt;/p&gt;
 
 &lt;p&gt;I have an infinite list of choices in front of me:&lt;/p&gt;
@@ -230,9 +292,9 @@ As an entrepreneur trying to get some traction, your are a spammer to the world 
  
  <entry>
    <title>Wish me good luck</title>
-   <link href="http://anthony-tresontani.github.com/Startup/2013/04/06/wish-me-good-luck"/>
+   <link href="http://anthony-tresontani.github.com/startup/2013/04/06/wish-me-good-luck"/>
    <updated>2013-04-06T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Startup/2013/04/06/wish-me-good-luck</id>
+   <id>http://anthony-tresontani.github.com/startup/2013/04/06/wish-me-good-luck</id>
    <content type="html">&lt;p&gt;5 weeks.&lt;/p&gt;
 
 &lt;p&gt;I have been writing technical post on this blog since almost a year now dedicated to find the best solution with my predilection tools: python / django.&lt;/p&gt;
@@ -248,9 +310,9 @@ As an entrepreneur trying to get some traction, your are a spammer to the world 
  
  <entry>
    <title>Why do I create my company now</title>
-   <link href="http://anthony-tresontani.github.com/Startup/2013/04/06/step-0-why-now"/>
+   <link href="http://anthony-tresontani.github.com/startup/2013/04/06/step-0-why-now"/>
    <updated>2013-04-06T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Startup/2013/04/06/step-0-why-now</id>
+   <id>http://anthony-tresontani.github.com/startup/2013/04/06/step-0-why-now</id>
    <content type="html">&lt;p&gt;This is a the first post of a new posts serie about how I am actually creating my company.&lt;/p&gt;
 
 &lt;p&gt;For people looking for gold advices, life-changing trick, I don&amp;#8217;t think there would be anything like that here.&lt;/p&gt;
@@ -284,9 +346,9 @@ As an entrepreneur trying to get some traction, your are a spammer to the world 
  
  <entry>
    <title>You are using south wrong</title>
-   <link href="http://anthony-tresontani.github.com/Django/2013/03/15/south-workflow"/>
+   <link href="http://anthony-tresontani.github.com/django/2013/03/15/south-workflow"/>
    <updated>2013-03-15T00:00:00+01:00</updated>
-   <id>http://anthony-tresontani.github.com/Django/2013/03/15/south-workflow</id>
+   <id>http://anthony-tresontani.github.com/django/2013/03/15/south-workflow</id>
    <content type="html">&lt;p&gt;If you are a hackernews fellow like me and if you like Django and South, you should have read a post about one of my former colleague about &lt;a href='http://andrewingram.net/2012/dec/common-pitfalls-django-south/'&gt;south common pitfall&lt;/a&gt;. That&amp;#8217;s a great post about all the mistakes people usually do when using south on their project. If you now apply that and your project grows, you might still do one of the major issue I use to do when using this migration tool.&lt;/p&gt;
 
 &lt;p&gt;On our actual project, we reached 317 migrations and that&amp;#8217;s clearly too much for a project of that size. The impact is huge in the development process, you can&amp;#8217;t run anymore the test suite with migrations on without waiting for minutes.&lt;/p&gt;
@@ -384,9 +446,9 @@ python manage.py migrate post&lt;/code&gt;&lt;/pre&gt;
  
  <entry>
    <title>Generating valid sudokus with a genetic algorithm</title>
-   <link href="http://anthony-tresontani.github.com/Python/2012/12/31/sudoku-generator-with-genetic"/>
+   <link href="http://anthony-tresontani.github.com/python/2012/12/31/sudoku-generator-with-genetic"/>
    <updated>2012-12-31T00:00:00+01:00</updated>
-   <id>http://anthony-tresontani.github.com/Python/2012/12/31/sudoku-generator-with-genetic</id>
+   <id>http://anthony-tresontani.github.com/python/2012/12/31/sudoku-generator-with-genetic</id>
    <content type="html">&lt;h1 id='brute_force'&gt;Brute force&lt;/h1&gt;
 
 &lt;p&gt;We worked once at a code Dojo on how to generate some valid sudokus. The conclusion was &amp;#8220;that&amp;#8217;s not that simple&amp;#8221; and especially when you try to figure out by yourself what could be an algorithm. In the 2 hours allocated to solve that problem, no team manage to get to an algorithm which do not &amp;#8220;always&amp;#8221; lead to a dead-end (whatever your next choice, the sudoku would not be valid). Pure brute force didn&amp;#8217;t work.&lt;/p&gt;
@@ -493,9 +555,9 @@ python manage.py migrate post&lt;/code&gt;&lt;/pre&gt;
  
  <entry>
    <title>Dear project managers, that's not so simple</title>
-   <link href="http://anthony-tresontani.github.com/Thoughts/2012/11/08/dear_pm_thats_not_so_simple"/>
+   <link href="http://anthony-tresontani.github.com/thoughts/2012/11/08/dear_pm_thats_not_so_simple"/>
    <updated>2012-11-08T00:00:00+01:00</updated>
-   <id>http://anthony-tresontani.github.com/Thoughts/2012/11/08/dear_pm_thats_not_so_simple</id>
+   <id>http://anthony-tresontani.github.com/thoughts/2012/11/08/dear_pm_thats_not_so_simple</id>
    <content type="html">&lt;p&gt;We are all Agile now. I am an agile developer in an agile company working on agile projects. That can be anything else than all good but I spend my times figuring out what should be done.&lt;/p&gt;
 
 &lt;p&gt;As a developer, somebody through various agile tools tell me what should be done. The most accurate description you can expect to get would be something like:&lt;/p&gt;
@@ -577,17 +639,17 @@ python manage.py migrate post&lt;/code&gt;&lt;/pre&gt;
  
  <entry>
    <title>Pro-tips: one step to higher dev efficency</title>
-   <link href="http://anthony-tresontani.github.com/Tips/2012/09/27/protips"/>
+   <link href="http://anthony-tresontani.github.com/tips/2012/09/27/protips"/>
    <updated>2012-09-27T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Tips/2012/09/27/protips</id>
+   <id>http://anthony-tresontani.github.com/tips/2012/09/27/protips</id>
    <content type="html">&lt;p&gt;I was not a professional developer one year ago. I was doing that for fun. Now, when I look back to my previous way of developing, there is few things that changed. Most of them are details, but details can have a great impact in your productivity.&lt;/p&gt;</content>
  </entry>
  
  <entry>
    <title>Multilingual search in Django with Haystack</title>
-   <link href="http://anthony-tresontani.github.com/Django/2012/09/20/multilingual-search"/>
+   <link href="http://anthony-tresontani.github.com/django/2012/09/20/multilingual-search"/>
    <updated>2012-09-20T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Django/2012/09/20/multilingual-search</id>
+   <id>http://anthony-tresontani.github.com/django/2012/09/20/multilingual-search</id>
    <content type="html">&lt;h1 id='multilingual_search_in_django_with_haystack'&gt;Multilingual search in Django with Haystack&lt;/h1&gt;
 
 &lt;p&gt;When you build a website for a swiss company, like we do at tangent, that&amp;#8217;s likely you would need to perform search in 3 languages.&lt;/p&gt;
@@ -730,9 +792,9 @@ class MultilingualSolrSearchBackend(SolrSearchBackend):
  
  <entry>
    <title>Workaround Django ORM limitation - create views</title>
-   <link href="http://anthony-tresontani.github.com/Django/2012/09/12/wka-django-orm-limitations"/>
+   <link href="http://anthony-tresontani.github.com/django/2012/09/12/wka-django-orm-limitations"/>
    <updated>2012-09-12T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Django/2012/09/12/wka-django-orm-limitations</id>
+   <id>http://anthony-tresontani.github.com/django/2012/09/12/wka-django-orm-limitations</id>
    <content type="html">&lt;p&gt;I faced this problem yesteday.&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;------------------      --------------      ------------------
@@ -819,9 +881,9 @@ class PromotionView(AbstractPromotion):
  
  <entry>
    <title>Patching django polymorphism</title>
-   <link href="http://anthony-tresontani.github.com/Python/2012/09/11/django-polymorphism"/>
+   <link href="http://anthony-tresontani.github.com/python/2012/09/11/django-polymorphism"/>
    <updated>2012-09-11T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Python/2012/09/11/django-polymorphism</id>
+   <id>http://anthony-tresontani.github.com/python/2012/09/11/django-polymorphism</id>
    <content type="html">&lt;h2 id='remember_oop'&gt;Remember OOP&lt;/h2&gt;
 
 &lt;p&gt;For the one who don&amp;#8217;t remember what is the abstract notion of &lt;a href='http://en.wikipedia.org/wiki/Polymorphism_in_object-oriented_programming'&gt;polymorphism&lt;/a&gt;. Here is a reminder:&lt;/p&gt;
@@ -1014,9 +1076,9 @@ for duck in Duck.objects.all():
  
  <entry>
    <title>Producing outcome</title>
-   <link href="http://anthony-tresontani.github.com/Thoughts/2012/09/10/producing-outcome"/>
+   <link href="http://anthony-tresontani.github.com/thoughts/2012/09/10/producing-outcome"/>
    <updated>2012-09-10T00:00:00+02:00</updated>
-   <id>http://anthony-tresontani.github.com/Thoughts/2012/09/10/producing-outcome</id>
+   <id>http://anthony-tresontani.github.com/thoughts/2012/09/10/producing-outcome</id>
    <content type="html">&lt;h2 id='producing_outcome__how_to_be_a_great_developer'&gt;Producing Outcome - How to be a great developer.&lt;/h2&gt;
 
 &lt;p&gt;I am, like you, a kind of passionate developer. I spend my free time digging the internet, programming on personnal projects, increasing my programming skills.&lt;/p&gt;
@@ -1076,9 +1138,9 @@ for duck in Duck.objects.all():
  
  <entry>
    <title>Django pratical test tool</title>
-   <link href="http://anthony-tresontani.github.com/Python/2012/01/06/django-pratical-testing"/>
+   <link href="http://anthony-tresontani.github.com/python/2012/01/06/django-pratical-testing"/>
    <updated>2012-01-06T00:00:00+01:00</updated>
-   <id>http://anthony-tresontani.github.com/Python/2012/01/06/django-pratical-testing</id>
+   <id>http://anthony-tresontani.github.com/python/2012/01/06/django-pratical-testing</id>
    <content type="html">&lt;p&gt;Testing Django may seems complicated sometimes, and especially with some django features full of encapsulation. This can be easily fixed by some python tricks.&lt;/p&gt;
 
 &lt;h2 id='testing_an_admin_function'&gt;Testing an admin function&lt;/h2&gt;
@@ -1192,9 +1254,9 @@ def setup(self):
  
  <entry>
    <title>Packaging a python app</title>
-   <link href="http://anthony-tresontani.github.com/Python/2012/01/05/pythonist-open-source-packaging"/>
+   <link href="http://anthony-tresontani.github.com/python/2012/01/05/pythonist-open-source-packaging"/>
    <updated>2012-01-05T00:00:00+01:00</updated>
-   <id>http://anthony-tresontani.github.com/Python/2012/01/05/pythonist-open-source-packaging</id>
+   <id>http://anthony-tresontani.github.com/python/2012/01/05/pythonist-open-source-packaging</id>
    <content type="html">&lt;p&gt;or what you should know to package a python application.&lt;/p&gt;
 
 &lt;p&gt;This blog is about the easiest place to put your code and do not fit for big project. But if you have a really nice open source personnal project and want to share it with the community, it&amp;#8217;s a good starting point.&lt;/p&gt;
